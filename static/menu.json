@@ -1,0 +1,1785 @@
+[{
+    "id": 1,
+    "name": "生产管理",
+    "level": 0,
+    "url": "N/A",
+    "parentid": 0,
+    "isleaf": 0
+},
+{
+    "id": 87,
+    "name": "生产分析",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 1,
+    "isleaf": 0
+},
+{
+    "id": 95,
+    "name": "当日生产分析",
+    "level": 2,
+    "url": "/superset/fangpu_24h_output",
+    "parentid": 87,
+    "isleaf": 1
+},
+{
+    "id": 96,
+    "name": "本周生产分析",
+    "level": 2,
+    "url": "/superset/fangpu_7d_output",
+    "parentid": 87,
+    "isleaf": 1
+},
+{
+    "id": 97,
+    "name": "本月生产分析",
+    "level": 2,
+    "url": "/superset/fangpu_28d_output",
+    "parentid": 87,
+    "isleaf": 1
+},
+{
+    "id": 88,
+    "name": "生产计划",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 1,
+    "isleaf": 0
+},
+{
+    "id": 98,
+    "name": "订单管理",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 99,
+    "name": "排产管理",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 100,
+    "name": "任务单管理",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 101,
+    "name": "生产日历",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 102,
+    "name": "订单加工概览",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 103,
+    "name": "订单跟踪",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 104,
+    "name": "任务单跟踪",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 105,
+    "name": "批次跟踪",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 106,
+    "name": "生产汇总",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 107,
+    "name": "配套统计",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 108,
+    "name": "在制品存量分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 109,
+    "name": "订单视图",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 110,
+    "name": "领料分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 88,
+    "isleaf": 1
+},
+{
+    "id": 89,
+    "name": "作业管理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 1,
+    "isleaf": 0
+},
+{
+    "id": 112,
+    "name": "工序维护",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 113,
+    "name": "工序汇报",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 114,
+    "name": "工序流转",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 115,
+    "name": "委外工序",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 116,
+    "name": "在制品盘点",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 117,
+    "name": "在制品日报",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 118,
+    "name": "在制品投产明细",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 119,
+    "name": "工序不良统计",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 120,
+    "name": "正在加工工序",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 121,
+    "name": "已完成工序",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 123,
+    "name": "人员班次记录",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 124,
+    "name": "班次日历",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 125,
+    "name": "生产能力分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 126,
+    "name": "生产负荷分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 89,
+    "isleaf": 1
+},
+{
+    "id": 90,
+    "name": "生产看板",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 1,
+    "isleaf": 0
+},
+{
+    "id": 127,
+    "name": "生产看板",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 90,
+    "isleaf": 1
+},
+{
+    "id": 128,
+    "name": "生产报警",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 90,
+    "isleaf": 1
+},
+{
+    "id": 129,
+    "name": "物料监控",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 90,
+    "isleaf": 1
+},
+{
+    "id": 130,
+    "name": "进度监控",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 90,
+    "isleaf": 1
+},
+{
+    "id": 131,
+    "name": "在制品监控",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 90,
+    "isleaf": 1
+},
+{
+    "id": 92,
+    "name": "生产监控",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 1,
+    "isleaf": 0
+},
+{
+    "id": 145,
+    "name": "生产看板",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 92,
+    "isleaf": 1
+},
+{
+    "id": 146,
+    "name": "生产报警",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 92,
+    "isleaf": 1
+},
+{
+    "id": 147,
+    "name": "物料监控",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 92,
+    "isleaf": 1
+},
+{
+    "id": 148,
+    "name": "在制品监控",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 92,
+    "isleaf": 1
+},
+{
+    "id": 149,
+    "name": "高清视频监控",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 92,
+    "isleaf": 1
+},
+{
+    "id": 93,
+    "name": "物料管理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 1,
+    "isleaf": 0
+},
+{
+    "id": 150,
+    "name": "产品信息管理",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 93,
+    "isleaf": 1
+},
+{
+    "id": 151,
+    "name": "零组件管理",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 93,
+    "isleaf": 1
+},
+{
+    "id": 152,
+    "name": "BOM管理",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 93,
+    "isleaf": 0
+},
+{
+    "id": 153,
+    "name": "单级分析",
+    "level": 3,
+    "url": "N/A",
+    "order": 1,
+    "parentid": 152,
+    "isleaf": 1
+},
+{
+    "id": 154,
+    "name": "多级分析",
+    "level": 3,
+    "url": "N/A",
+    "order": 1,
+    "parentid": 152,
+    "isleaf": 1
+},
+{
+    "id": 155,
+    "name": "差异分析",
+    "level": 3,
+    "url": "N/A",
+    "order": 1,
+    "parentid": 152,
+    "isleaf": 1
+},
+{
+    "id": 156,
+    "name": "树形查看",
+    "level": 3,
+    "url": "N/A",
+    "order": 1,
+    "parentid": 152,
+    "isleaf": 1
+},
+{
+    "id": 157,
+    "name": "工艺参数管理",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 93,
+    "isleaf": 1
+},
+{
+    "id": 158,
+    "name": "试验工艺参数",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 93,
+    "isleaf": 1
+},
+{
+    "id": 94,
+    "name": "库房管理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 1,
+    "isleaf": 0
+},
+{
+    "id": 159,
+    "name": "检验入库",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 94,
+    "isleaf": 1
+},
+{
+    "id": 160,
+    "name": "发货领料",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 94,
+    "isleaf": 1
+},
+{
+    "id": 161,
+    "name": "仓库调拨",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 94,
+    "isleaf": 1
+},
+{
+    "id": 162,
+    "name": "库房盘点",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 94,
+    "isleaf": 1
+},
+{
+    "id": 163,
+    "name": "库房查询",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 94,
+    "isleaf": 1
+},
+{
+    "id": 164,
+    "name": "仓库配置",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 94,
+    "isleaf": 1
+},
+{
+    "id": 165,
+    "name": "权限管理",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 94,
+    "isleaf": 1
+},
+{
+    "id": 167,
+    "name": "库房分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 94,
+    "isleaf": 0
+},
+{
+    "id": 168,
+    "name": "流水统计分析",
+    "level": 3,
+    "url": "N/A",
+    "order": 1,
+    "parentid": 167,
+    "isleaf": 1
+},
+{
+    "id": 169,
+    "name": "库存统计分析",
+    "level": 3,
+    "url": "N/A",
+    "order": 1,
+    "parentid": 167,
+    "isleaf": 1
+},
+{
+    "id": 170,
+    "name": "保质统计分析",
+    "level": 3,
+    "url": "N/A",
+    "order": 1,
+    "parentid": 167,
+    "isleaf": 1
+},
+{
+    "id": 171,
+    "name": "滞料统计分析",
+    "level": 3,
+    "url": "N/A",
+    "order": 1,
+    "parentid": 167,
+    "isleaf": 1
+},
+{
+    "id": 172,
+    "name": "超储统计分析",
+    "level": 3,
+    "url": "N/A",
+    "order": 1,
+    "parentid": 167,
+    "isleaf": 1
+},
+{
+    "id": 173,
+    "name": "批次跟踪分析",
+    "level": 3,
+    "url": "N/A",
+    "order": 1,
+    "parentid": 167,
+    "isleaf": 1
+},
+{
+    "id": 91,
+    "name": "质量管理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 1,
+    "isleaf": 0
+},
+{
+    "id": 280,
+    "name": "SPC分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 0
+},
+{
+    "id": 277,
+    "name": "全区域质量监测",
+    "level": 3,
+    "url": "/qualityMange/Monitor",
+    "order": 1,
+    "parentid": 280,
+    "isleaf": 1
+},
+{
+    "id": 278,
+    "name": "SPC检测概览",
+    "level": 3,
+    "url": "/qualityMange/spc",
+    "order": 1,
+    "parentid": 280,
+    "isleaf": 1
+},
+{
+    "id": 279,
+    "name": "检测点分析",
+    "level": 3,
+    "url": "/qualityMange/nodeMonitor",
+    "order": 1,
+    "parentid": 280,
+    "isleaf": 1
+},
+{
+    "id": 132,
+    "name": "来料检验",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 133,
+    "name": "工序检验",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 134,
+    "name": "委外工序检验",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 135,
+    "name": "发货检验",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 136,
+    "name": "退货检验",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 137,
+    "name": "库存检验",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 138,
+    "name": "客户投诉",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 139,
+    "name": "质量事故",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 140,
+    "name": "取样管理",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 141,
+    "name": "质量分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 142,
+    "name": "缺陷主因分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 143,
+    "name": "措施跟踪",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 144,
+    "name": "废品统计",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 91,
+    "isleaf": 1
+},
+{
+    "id": 5,
+    "name": "设备管理",
+    "level": 0,
+    "url": "N/A",
+    "parentid": 0,
+    "isleaf": 0
+},
+{
+    "id": 174,
+    "name": "设备资料",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 5,
+    "isleaf": 0
+},
+{
+    "id": 181,
+    "name": "设备工位信息",
+    "level": 2,
+    "url": "/Device/Workstation",
+    "parentid": 174,
+    "isleaf": 1
+},
+{
+    "id": 182,
+    "name": "设备类别维护",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 174,
+    "isleaf": 1
+},
+{
+    "id": 222,
+    "name": "状态类别维护",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 174,
+    "isleaf": 1
+},
+{
+    "id": 175,
+    "name": "设备运行状态",
+    "level": 1,
+    "url": "/device/status",
+    "parentid": 5,
+    "isleaf": 1
+},
+{
+    "id": 176,
+    "name": "设备运行",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 5,
+    "isleaf": 0
+},
+{
+    "id": 183,
+    "name": "事故类别维护",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 176,
+    "isleaf": 1
+},
+{
+    "id": 184,
+    "name": "设备运行维护",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 176,
+    "isleaf": 1
+},
+{
+    "id": 185,
+    "name": "设备事故维护",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 176,
+    "isleaf": 1
+},
+{
+    "id": 177,
+    "name": "设备点检",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 5,
+    "isleaf": 0
+},
+{
+    "id": 186,
+    "name": "设备点检计划",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 177,
+    "isleaf": 1
+},
+{
+    "id": 187,
+    "name": "设备点检录入",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 177,
+    "isleaf": 1
+},
+{
+    "id": 188,
+    "name": "设备点检分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 177,
+    "isleaf": 1
+},
+{
+    "id": 178,
+    "name": "设备保养",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 5,
+    "isleaf": 0
+},
+{
+    "id": 189,
+    "name": "设备保养计划",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 178,
+    "isleaf": 1
+},
+{
+    "id": 190,
+    "name": "设备保养人",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 178,
+    "isleaf": 1
+},
+{
+    "id": 191,
+    "name": "设备保养提醒",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 178,
+    "isleaf": 1
+},
+{
+    "id": 179,
+    "name": "设备维修",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 5,
+    "isleaf": 0
+},
+{
+    "id": 192,
+    "name": "设备维修计划",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 179,
+    "isleaf": 1
+},
+{
+    "id": 193,
+    "name": "设备维修申请",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 179,
+    "isleaf": 1
+},
+{
+    "id": 194,
+    "name": "设备维修工单",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 179,
+    "isleaf": 1
+},
+{
+    "id": 195,
+    "name": "设备维修验收",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 179,
+    "isleaf": 1
+},
+{
+    "id": 196,
+    "name": "设备维修分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 179,
+    "isleaf": 1
+},
+{
+    "id": 180,
+    "name": "设备分析",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 5,
+    "isleaf": 0
+},
+{
+    "id": 197,
+    "name": "设备停机分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 180,
+    "isleaf": 1
+},
+{
+    "id": 198,
+    "name": "设备绩效分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 180,
+    "isleaf": 1
+},
+{
+    "id": 199,
+    "name": "设备状态分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 180,
+    "isleaf": 1
+},
+{
+    "id": 200,
+    "name": "设备负载分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 180,
+    "isleaf": 1
+},
+{
+    "id": 201,
+    "name": "设备报警分析",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 180,
+    "isleaf": 1
+},
+{
+    "id": 269,
+    "name": "设备绩效",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 5,
+    "isleaf": 0
+},
+{
+    "id": 270,
+    "name": "设备OEE总览",
+    "level": 2,
+    "url": "/OEE/OEEoutline",
+    "parentid": 269,
+    "isleaf": 1
+},
+{
+    "id": 271,
+    "name": "设备状态详情",
+    "level": 2,
+    "url": "/OEE/deviceInfo",
+    "parentid": 269,
+    "isleaf": 1
+},
+{
+    "id": 272,
+    "name": "详细数据分析",
+    "level": 2,
+    "url": "/OEE/dataanalysis",
+    "parentid": 269,
+    "isleaf": 1
+},
+{
+    "id": 7,
+    "name": "能源管理",
+    "level": 0,
+    "url": "N/A",
+    "parentid": 0,
+    "isleaf": 0
+},
+{
+    "id": 59,
+    "name": "实时监控",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 7,
+    "isleaf": 0
+},
+{
+    "id": 66,
+    "name": "总体概览",
+    "level": 2,
+    "url": "/superset/bodapower/index",
+    "parentid": 59,
+    "isleaf": 1
+},
+{
+    "id": 67,
+    "name": "用能单元",
+    "level": 2,
+    "url": "/superset/bodapower/energyUnit",
+    "parentid": 59,
+    "isleaf": 1
+},
+{
+    "id": 223,
+    "name": "温湿度采集",
+    "level": 2,
+    "url": "/Energy/th_collect",
+    "parentid": 59,
+    "isleaf": 1
+},
+{
+    "id": 224,
+    "name": "电能采集",
+    "level": 2,
+    "url": "/Energy/e_collect",
+    "parentid": 59,
+    "isleaf": 1
+},
+{
+    "id": 225,
+    "name": "预警参数",
+    "level": 2,
+    "url": "/Energy/parameter",
+    "parentid": 59,
+    "isleaf": 1
+},
+{
+    "id": 226,
+    "name": "异常记录",
+    "level": 2,
+    "url": "/Energy/abnormal_info",
+    "parentid": 59,
+    "isleaf": 1
+},
+{
+    "id": 227,
+    "name": "能耗管理",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 59,
+    "isleaf": 0
+},
+{
+    "id": 228,
+    "name": "能耗单元",
+    "level": 3,
+    "url": "/Energy/energy_unit",
+    "order": 1,
+    "parentid": 227,
+    "isleaf": 1
+},
+{
+    "id": 229,
+    "name": "能耗表",
+    "level": 3,
+    "url": "/Energy/energy_meter",
+    "order": 1,
+    "parentid": 227,
+    "isleaf": 1
+},
+{
+    "id": 230,
+    "name": "能耗类型",
+    "level": 3,
+    "url": "/Energy/energy_type",
+    "order": 1,
+    "parentid": 227,
+    "isleaf": 1
+},
+{
+    "id": 60,
+    "name": "用电分析",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 7,
+    "isleaf": 0
+},
+{
+    "id": 68,
+    "name": "用电量分析",
+    "level": 2,
+    "url": "/superset/bodapower/volumeAnalysis",
+    "parentid": 60,
+    "isleaf": 1
+},
+{
+    "id": 69,
+    "name": "用电成本分析",
+    "level": 2,
+    "url": "/superset/bodapower/costAnalysis",
+    "parentid": 60,
+    "isleaf": 1
+},
+{
+    "id": 70,
+    "name": "用电质量分析",
+    "level": 2,
+    "url": "/superset/bodapower/qualityAnalysis",
+    "parentid": 60,
+    "isleaf": 1
+},
+{
+    "id": 71,
+    "name": "用电安全分析",
+    "level": 2,
+    "url": "/superset/bodapower/safetyAnalysis",
+    "parentid": 60,
+    "isleaf": 1
+},
+{
+    "id": 61,
+    "name": "综合诊断",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 7,
+    "isleaf": 0
+},
+{
+    "id": 72,
+    "name": "用电量异常诊断",
+    "level": 2,
+    "url": "/superset/bodapower/volumeDiagnosis",
+    "parentid": 61,
+    "isleaf": 1
+},
+{
+    "id": 73,
+    "name": "用电成本异常诊断",
+    "level": 2,
+    "url": "/superset/bodapower/costDiagnosis",
+    "parentid": 61,
+    "isleaf": 1
+},
+{
+    "id": 74,
+    "name": "用电质量异常诊断",
+    "level": 2,
+    "url": "/superset/bodapower/qualityDiagnosis",
+    "parentid": 61,
+    "isleaf": 1
+},
+{
+    "id": 75,
+    "name": "用电安全异常诊断",
+    "level": 2,
+    "url": "/superset/bodapower/safetyDiagnosis",
+    "parentid": 61,
+    "isleaf": 1
+},
+{
+    "id": 62,
+    "name": "用电治理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 7,
+    "isleaf": 0
+},
+{
+    "id": 76,
+    "name": "用电量治理",
+    "level": 2,
+    "url": "/superset/bodapower/volumeImprove",
+    "parentid": 62,
+    "isleaf": 1
+},
+{
+    "id": 77,
+    "name": "用电成本治理",
+    "level": 2,
+    "url": "/superset/bodapower/costImprove",
+    "parentid": 62,
+    "isleaf": 1
+},
+{
+    "id": 78,
+    "name": "电能质量治理",
+    "level": 2,
+    "url": "/superset/bodapower/qualityImprove",
+    "parentid": 62,
+    "isleaf": 1
+},
+{
+    "id": 79,
+    "name": "用电安全治理",
+    "level": 2,
+    "url": "/superset/bodapower/safetyImprove",
+    "parentid": 62,
+    "isleaf": 1
+},
+{
+    "id": 63,
+    "name": "绩效管理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 7,
+    "isleaf": 0
+},
+{
+    "id": 80,
+    "name": "绩效排名",
+    "level": 2,
+    "url": "/superset/bodapower/performanceRank",
+    "parentid": 63,
+    "isleaf": 1
+},
+{
+    "id": 64,
+    "name": "信息管理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 7,
+    "isleaf": 0
+},
+{
+    "id": 81,
+    "name": "用户单元设置",
+    "level": 2,
+    "url": "/superset/bodapower/energyUnitSett",
+    "parentid": 64,
+    "isleaf": 1
+},
+{
+    "id": 82,
+    "name": "用户管理设置",
+    "level": 2,
+    "url": "/superset/bodapower/userAccountSett",
+    "parentid": 64,
+    "isleaf": 1
+},
+{
+    "id": 83,
+    "name": "数据采集设置",
+    "level": 2,
+    "url": "/superset/bodapower/DataCollectionSett",
+    "parentid": 64,
+    "isleaf": 1
+},
+{
+    "id": 65,
+    "name": "报表管理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 7,
+    "isleaf": 0
+},
+{
+    "id": 84,
+    "name": "台账审计报表",
+    "level": 2,
+    "url": "/superset/bodapower/reportAudit",
+    "parentid": 65,
+    "isleaf": 1
+},
+{
+    "id": 9,
+    "name": "员工分析",
+    "level": 0,
+    "url": "N/A",
+    "parentid": 0,
+    "isleaf": 0
+},
+{
+    "id": 202,
+    "name": "班次管理",
+    "level": 1,
+    "url": "/Shift/ShiftInfo",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 203,
+    "name": "排班管理",
+    "level": 1,
+    "url": "/Shift/UserShift",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 204,
+    "name": "排班查询",
+    "level": 1,
+    "url": "/Shift/ShiftSearch",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 205,
+    "name": "考勤分析",
+    "level": 1,
+    "url": "/Staff/AttendanceInfo",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 206,
+    "name": "人员考勤概览",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 207,
+    "name": "工作时间模型",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 208,
+    "name": "个人工作时间",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 209,
+    "name": "个人工作计划",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 210,
+    "name": "月度时间账单",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 211,
+    "name": "个人时间统计",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 212,
+    "name": "薪资类型统计",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 213,
+    "name": "人员薪酬配置",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 9,
+    "isleaf": 1
+},
+{
+    "id": 232,
+    "name": "数据分析",
+    "level": 0,
+    "url": "/superset/welcome",
+    "parentid": 0,
+    "isleaf": 0
+},
+{
+    "id": 235,
+    "name": "数据源配置",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 232,
+    "isleaf": 0
+},
+{
+    "id": 250,
+    "name": "数据库",
+    "level": 2,
+    "url": "/superset/Databases",
+    "parentid": 235,
+    "isleaf": 1
+},
+{
+    "id": 251,
+    "name": "数据表",
+    "level": 2,
+    "url": "/superset/Tables",
+    "parentid": 235,
+    "isleaf": 1
+},
+{
+    "id": 252,
+    "name": "Druid集群",
+    "level": 2,
+    "url": "/superset/DruidClusters",
+    "parentid": 235,
+    "isleaf": 1
+},
+{
+    "id": 253,
+    "name": "Druid数据源",
+    "level": 2,
+    "url": "/superset/DruidDataSources",
+    "parentid": 235,
+    "isleaf": 1
+},
+{
+    "id": 254,
+    "name": "更新Druid元数据",
+    "level": 2,
+    "url": "/superset/RefreshDruidMetadata",
+    "parentid": 235,
+    "isleaf": 1
+},
+{
+    "id": 236,
+    "name": "数据切片",
+    "level": 1,
+    "url": "/superset/Slices",
+    "parentid": 232,
+    "isleaf": 1
+},
+{
+    "id": 237,
+    "name": "数据看板",
+    "level": 1,
+    "url": "/superset/Dashboards",
+    "parentid": 232,
+    "isleaf": 1
+},
+{
+    "id": 238,
+    "name": "分析工具箱",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 232,
+    "isleaf": 0
+},
+{
+    "id": 256,
+    "name": "查询搜索",
+    "level": 2,
+    "url": "/superset/QuerySearch",
+    "parentid": 238,
+    "isleaf": 1
+},
+{
+    "id": 257,
+    "name": "已保存查询",
+    "level": 2,
+    "url": "/superset/SavedQueried",
+    "parentid": 238,
+    "isleaf": 1
+},
+{
+    "id": 255,
+    "name": "SQL 编辑器",
+    "level": 2,
+    "url": "/superset/SQLEditor",
+    "parentid": 238,
+    "isleaf": 1
+},
+{
+    "id": 234,
+    "name": "模块配置",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 232,
+    "isleaf": 0
+},
+{
+    "id": 247,
+    "name": "导入仪表盘",
+    "level": 2,
+    "url": "/superset/ImportDashboards",
+    "parentid": 234,
+    "isleaf": 1
+},
+{
+    "id": 248,
+    "name": "CSS模板",
+    "level": 2,
+    "url": "/superset/CssTemplates",
+    "parentid": 234,
+    "isleaf": 1
+},
+{
+    "id": 249,
+    "name": "查询",
+    "level": 2,
+    "url": "/superset/Queries",
+    "parentid": 234,
+    "isleaf": 1
+},
+{
+    "id": 37,
+    "name": "数据管理",
+    "level": 0,
+    "url": "N/A",
+    "parentid": 0,
+    "isleaf": 0
+},
+{
+    "id": 38,
+    "name": "数据接入",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 37,
+    "isleaf": 0
+},
+{
+    "id": 42,
+    "name": "OPC",
+    "level": 2,
+    "url": "/Daq/Linkin/Opc",
+    "parentid": 38,
+    "isleaf": 1
+},
+{
+    "id": 43,
+    "name": "ModbusTCP",
+    "level": 2,
+    "url": "/Daq/Linkin/ModbusTcp",
+    "parentid": 38,
+    "isleaf": 1
+},
+{
+    "id": 44,
+    "name": "Mqtt",
+    "level": 2,
+    "url": "/Daq/Linkin/Mqtt",
+    "parentid": 38,
+    "isleaf": 1
+},
+{
+    "id": 39,
+    "name": "数据处理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 37,
+    "isleaf": 0
+},
+{
+    "id": 45,
+    "name": "数据点概况",
+    "level": 2,
+    "url": "/Daq/App/Tags",
+    "parentid": 39,
+    "isleaf": 1
+},
+{
+    "id": 46,
+    "name": "数据点配置",
+    "level": 2,
+    "url": "/Daq/App/TagDetail",
+    "parentid": 39,
+    "isleaf": 1
+},
+{
+    "id": 47,
+    "name": "能效管理",
+    "level": 2,
+    "url": "/Daq/App/Energy",
+    "parentid": 39,
+    "isleaf": 1
+},
+{
+    "id": 48,
+    "name": "数据报警",
+    "level": 2,
+    "url": "/Daq/App/Warn",
+    "parentid": 39,
+    "isleaf": 1
+},
+{
+    "id": 49,
+    "name": "数据清理",
+    "level": 2,
+    "url": "/Daq/App/Config/Process",
+    "parentid": 39,
+    "isleaf": 1
+},
+{
+    "id": 50,
+    "name": "数据存储",
+    "level": 2,
+    "url": "N/A",
+    "parentid": 39,
+    "isleaf": 1
+},
+{
+    "id": 40,
+    "name": "数据接口",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 37,
+    "isleaf": 0
+},
+{
+    "id": 51,
+    "name": "url数据访问",
+    "level": 2,
+    "url": "/Daq/Api/url",
+    "parentid": 40,
+    "isleaf": 1
+},
+{
+    "id": 52,
+    "name": "数据推送 ",
+    "level": 2,
+    "url": "/Daq/Api/Push",
+    "parentid": 40,
+    "isleaf": 1
+},
+{
+    "id": 41,
+    "name": "运维管理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 37,
+    "isleaf": 0
+},
+{
+    "id": 53,
+    "name": "模块运维",
+    "level": 2,
+    "url": "/Daq/OP/Service",
+    "parentid": 41,
+    "isleaf": 1
+},
+{
+    "id": 54,
+    "name": "系统运维",
+    "level": 2,
+    "url": "/Daq/OP/System",
+    "parentid": 41,
+    "isleaf": 1
+},
+{
+    "id": 12,
+    "name": "系统配置",
+    "level": 0,
+    "url": "N/A",
+    "parentid": 0,
+    "isleaf": 0
+},
+{
+    "id": 20,
+    "name": "公共资料设置",
+    "level": 1,
+    "url": "/Common/DataDict",
+    "parentid": 12,
+    "isleaf": 1
+},
+{
+    "id": 28,
+    "name": "系统设置",
+    "level": 1,
+    "url": "/NA",
+    "parentid": 12,
+    "isleaf": 1
+},
+{
+    "id": 32,
+    "name": "科目",
+    "level": 2,
+    "url": "/test",
+    "parentid": 12,
+    "isleaf": 1
+},
+{
+    "id": 36,
+    "name": "权限管理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 12,
+    "isleaf": 0
+},
+{
+    "id": 23,
+    "name": "用户组管理",
+    "level": 2,
+    "url": "/system/rolemanage",
+    "parentid": 36,
+    "isleaf": 1
+},
+{
+    "id": 24,
+    "name": "模块管理",
+    "level": 2,
+    "url": "/system/modulemanage",
+    "parentid": 36,
+    "isleaf": 1
+},
+{
+    "id": 25,
+    "name": "权限列表",
+    "level": 2,
+    "url": "/system/permissionmanage",
+    "parentid": 36,
+    "isleaf": 1
+},
+{
+    "id": 26,
+    "name": "权限配置",
+    "level": 2,
+    "url": "/system/rolepermission",
+    "parentid": 36,
+    "isleaf": 1
+},
+{
+    "id": 215,
+    "name": "用户管理",
+    "level": 1,
+    "url": "/system/usermanage",
+    "parentid": 12,
+    "isleaf": 1
+},
+{
+    "id": 217,
+    "name": "部门管理",
+    "level": 1,
+    "url": "N/A",
+    "parentid": 12,
+    "isleaf": 1
+},
+{
+    "id": 219,
+    "name": "用户词典",
+    "level": 1,
+    "url": "/Common/dict_page",
+    "parentid": 12,
+    "isleaf": 1
+},
+{
+    "id": 220,
+    "name": "缓存清理",
+    "level": 1,
+    "url": "/system/cacheclear",
+    "parentid": 12,
+    "isleaf": 1
+},
+{
+    "id": 221,
+    "name": "消息推送",
+    "level": 1,
+    "url": "/Message/NoticeInfo",
+    "parentid": 12,
+    "isleaf": 1
+},
+{
+    "id": 231,
+    "name": "服务配置管理",
+    "level": 1,
+    "url": "/Common/ServiceConfigMag",
+    "parentid": 12,
+    "isleaf": 1
+}
+]
