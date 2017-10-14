@@ -7,9 +7,7 @@ Vue.use(VueResource);
 Vue.config.productionTip = false
 //css
 import '@/style/reset.css'
-import '@/style/common.css'
 import '@/style/font-awesome4.7/css/font-awesome.min.css'
-import '@/style/animate.min.css'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

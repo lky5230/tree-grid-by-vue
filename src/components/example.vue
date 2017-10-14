@@ -16,12 +16,27 @@
                 <i style="transform: translateX(-12px)" class="fa fa-cogs" aria-hidden="true"></i>
             </template>
             <span v-else-if="col.delete == true">
-                <button class="btn-delete" :disabled="deleteBtnDisable" @click="removeLine">
+                <button title="删除所选项" class="btn-delete" :disabled="deleteBtnDisable" @click="removeLine">
                     <i v-if="deleteBtnDisable" class="fa fa-spin fa-spinner" aria-hidden="true"></i>
-                    {{deleteBtnDisable? '': '删除'}}
+                    <i v-if="!deleteBtnDisable" class="fa fa-trash" aria-hidden="true"></i>
                 </button>
             </span>
-            <span v-else>{{col.name}}</span>
+            <span v-else>
+                <span v-if="col.isTree">
+                    <button 
+                        title="刷新"
+                        :disabled="refreshBtnDisable" 
+                        @click="refreshTable"
+                        class="btn-refresh">
+                        <i 
+                            :class="{'fa-spin':refreshBtnDisable? true: false}" 
+                            class="fa fa-refresh" 
+                            aria-hidden="true"></i>
+                    </button>
+                    &nbsp;
+                </span>
+                {{col.name}}
+            </span>
         </li>
     </ul>
     <!--表体-->
@@ -80,39 +95,42 @@
                             @input="inputEdit(rowItem.id, col.prop, $event)"
                             :value="lineValue['lineValue'+col.prop+rowItem.id]" />
                     </template>
-                    
+
                     <!--操作按钮-->
                     <template v-if="col.operate">
-                        <span class="hover-btn">
+                        <span class="hover-btn" @mouseover="mouseHover(rowItem.id, 1)"  @mouseout="mouseHover(rowItem.id, 2)" >
                             <span class="hover-btn-span">
                                 &nbsp;<i class="fa fa-pencil-square" aria-hidden="true"></i>
                             </span>
-                            <span class="col-btn-group">
-                                <span v-show="!operateStatus['status'+rowItem.id]">
-                                    <button class="btn-edit" @click="operateBtn(rowItem.id)">
-                                        <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;编辑
-                                    </button>
-                                    <button class="btn-add" @click="addLine(rowItem.id, 1)">
-                                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;增加同级
-                                    </button>
-                                    <button class="btn-add" @click="addLine(rowItem.id, 2)">
-                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;增加下级
-                                    </button>
-                                    <button class="btn-upload" v-if="rowItem.modify" @click="upload(rowItem.id)">
-                                        <i class="fa fa-cloud-upload" aria-hidden="true"></i>&nbsp;上传
-                                    </button>
+                            <transition name="as">
+                                <span v-show="hoverBtn['hoverBtn'+rowItem.id]" class="col-btn-group">
+                                    <span v-show="!operateStatus['status'+rowItem.id]">
+                                        <button class="btn-edit" @click="operateBtn(rowItem.id)">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;编辑
+                                        </button>
+                                        <button class="btn-add" @click="addLine(rowItem.id, 1)">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;增加同级
+                                        </button>
+                                        <button class="btn-add" @click="addLine(rowItem.id, 2)">
+                                            <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;增加下级
+                                        </button>
+                                        <button class="btn-upload" v-if="rowItem.modify" @click="upload(rowItem.id)">
+                                            <i class="fa fa-cloud-upload" aria-hidden="true"></i>&nbsp;上传
+                                        </button>
+                                    </span>
+                                    <span v-show="!!operateStatus['status'+rowItem.id]">
+                                        <button class="btn-confirm" @click="saveBtn(rowItem.id)">
+                                            <i class="fa fa-check" aria-hidden="true"></i>&nbsp;确认
+                                        </button>
+                                        <button class="btn-cancel" @click="cancel(rowItem.id)">
+                                            <i class="fa fa-times" aria-hidden="true"></i>&nbsp;撤销
+                                        </button>
+                                    </span>
                                 </span>
-                                <span v-show="!!operateStatus['status'+rowItem.id]">
-                                    <button class="btn-confirm" @click="saveBtn(rowItem.id)">
-                                        <i class="fa fa-check" aria-hidden="true"></i>&nbsp;确认
-                                    </button>
-                                    <button class="btn-cancel" @click="cancel(rowItem.id)">
-                                        <i class="fa fa-times" aria-hidden="true"></i>&nbsp;撤销
-                                    </button>
-                                </span>
-                            </span>
+                            </transition>
                         </span>
                     </template>
+
                     <!--删除-复选框-->
                     <template v-if="col.delete">
                         <span 
@@ -123,6 +141,15 @@
                             <i v-if="!checkboxControl['active'+rowItem.id]" class="fa fa-circle-o" aria-hidden="true"></i>
                         </span>
                     </template>
+
+                    <!--准备上传的提示-->
+                    <template v-if="rowItem.modify && colIndex == 0">
+                        <span class="modify-pin">
+                            <span class="modify-pin-title">记得上传</span>
+                            <i class="fa fa-exclamation" aria-hidden="true"></i>
+                        </span>
+                    </template>
+                    
                 </li>
             </div>
         </div>
@@ -134,6 +161,7 @@
 
 export default {
     name: 'treeGrid', 
+    props: {},
     data() {
         return {
             column: [
@@ -149,6 +177,7 @@ export default {
             data_format: null,
             // 移入移出-控制
             operate:{},
+            hoverBtn: {},
             // 每行的编辑状态
             operateStatus: {},
             // 每行的上传loading
@@ -161,10 +190,13 @@ export default {
             deleteIdArr: [],
             //表头-删除btn
             deleteBtnDisable: false,
+            //表头-刷新btn
+            refreshBtnDisable: false,
         };
     },
     
     created(){
+        //#####*******
         this.$http.get('static/menu.json').then(res=>{
             this.init(res.data)
         });
@@ -174,10 +206,20 @@ export default {
         
     },
     methods: {
+        //   ****#####刷新表格
+        refreshTable(){
+            this.refreshBtnDisable = true;
+            setTimeout(()=>{
+                this.$http.get('static/menu.json').then(res=>{
+                    this.init(res.data);
+                });
+            }, 1000)
+        },
         init(_data){
+            this.refreshBtnDisable = false;
             // 整理data
             this.data = combineData(cleanData(_data));
-            // 得到data格式
+            // 得到其中的数据对象格式
             let data_format = {...this.data[0]};
             for(let key in data_format){
                 if(data_format.hasOwnProperty(key)){
@@ -209,6 +251,14 @@ export default {
         },
         rowMouseLeave(id){
             this.$set(this.operate, 'operate'+id, false);
+        },
+        //操作列的移入移出
+        mouseHover(rowid, index){
+            if(index == 1){
+                this.$set(this.hoverBtn, 'hoverBtn'+rowid, true);
+            }else if(index == 2){
+                this.$set(this.hoverBtn, 'hoverBtn'+rowid, false);
+            }
         },
         //行的伸缩
         expand(rowItem, bool){
@@ -269,7 +319,7 @@ export default {
             //打开编辑状态
             this.$set(this.operateStatus, 'status'+rowItemId, true)
         },
-        //btn-保存
+        //btn-确认
         saveBtn(rowItemId){
             let d = [...this.data];
             let col = [...this.column];
@@ -307,7 +357,7 @@ export default {
             //关闭编辑状态
             this.$set(this.operateStatus, 'status'+rowItemId, false)
         },
-        //btn-上传
+        //btn-上传 #####*******
         upload(rowItemId){
             let d = [...this.data];
             for(let i=0; i<d.length; i++){
@@ -467,7 +517,7 @@ export default {
                 }
             };
         },
-        //btn-删除
+        //btn-删除  #####*******
         removeLine(){
             let deleteIdArr = [...this.deleteIdArr];
             if(deleteIdArr.length == 0) return ;
@@ -591,8 +641,17 @@ function combineData(cleanData){
 </script>
 
 <style lang="scss" scoped>
+*{
+    box-sizing: border-box !important;
+}
+.nowrap{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 .tree{
     // overflow-x: hidden;
+    margin: 2px;
     .table-header{
         display: flex;
         width: 100%;
@@ -607,6 +666,7 @@ function combineData(cleanData){
             min-width: 90px;
             height: 36px;
             line-height: 36px;
+            position: relative;
         }
     }
     .table-body-li-wrap{
@@ -636,8 +696,12 @@ function combineData(cleanData){
             height: 32px;
             line-height: 32px;
             text-align: left;
+            &:nth-of-type(1){
+                position: relative;
+                overflow: visible;
+            }
             &.modify{
-                background-color: rgba(206,142,64,.3);
+                background: #f7f4ea;
             }
             .fa{
                 cursor: pointer;
@@ -690,12 +754,17 @@ function combineData(cleanData){
                     width: 100%;
                     text-align: center;
                     font-size: 18px;
+                    background: #eef1f6;
+                    border: none;
+                    color: #2472a9;
+                    &:hover{
+                        background: #d8e0ec;
+                    }
                 }
                 .col-btn-group{
-                    display: none;
                     position: absolute;
                     left: calc(100% - 1px);
-                    top: 0px;
+                    top: -2px;
                     z-index: 99;
                     background: #9adde8;
                     padding-left: 10px;
@@ -716,12 +785,32 @@ function combineData(cleanData){
                         border-top: none;
                     }
                 }
-                &:hover{
-                    .col-btn-group{
-                        display: inline-block;
-                    }
+            }
+            .modify-pin{
+                position: absolute;
+                right: 0;
+                bottom: calc(100% - 20px);
+                perspective: 150px;
+                animation: rotateX 10s infinite alternate ease-in-out;
+                transform-origin: center 22px;
+                .modify-pin-title{
+                    display: block;
+                    height: 16px;
+                    font-size: 10px;
+                    line-height: 16px;
+                    text-align: center;
+                    background: #dfc888;
+                    width: 54px;
+                    color: #652e0c;
+                }
+                .fa{
+                    display: block;
+                    text-align: center;
+                    font-size: 10px;    
+                    color: #864816;
                 }
             }
+            
         }
     }
     button{
@@ -736,14 +825,35 @@ function combineData(cleanData){
             -moz-outline: none;
         }
         &.btn-delete{
-            background-color: #ba7438;
-            color: #eef1f6;
             transform: translateX(-6px);
+            background-color: #dbb602;
+            color: #86340c;
+            font-size: 15px;
+            padding-left: 8px;
+            padding-right: 8px;
+            height: 20px;
+            border: none;
             &:hover{
-                background-color: #e39e64;
+                background-color: #f3be91;
             }
             &[disabled]{
                 background-color: #f3be91;
+            }
+        }
+        &.btn-refresh{
+            transform: translateX(-6px);
+            background-color: #1dd545;
+            color: #126868;
+            font-size: 15px;
+            padding-left: 8px;
+            padding-right: 8px;
+            height: 20px;
+            border: none;
+            &:hover{
+                background-color: #7ff699;
+            }
+            &[disabled]{
+                background-color: #a0eeb1;
             }
         }
         &.btn-edit{
@@ -784,5 +894,28 @@ function combineData(cleanData){
     }
     
 }
+
+@keyframes rotateX{
+    47%{
+        transform: rotateZ(0deg);
+    }
+    49%{
+        transform: rotateZ(-6deg);
+    }
+    51%{
+        transform: rotateZ(6deg);
+    }
+    53%{
+        transform: rotateZ(0deg);
+    }
+}
+.as-enter-active, .as-leave-active {
+  transition: all .2s
+}
+.as-enter, .as-leave-to {
+  opacity: 0;
+  transform: translateX(16px);
+}
+
 </style>
 
