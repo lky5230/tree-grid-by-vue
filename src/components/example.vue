@@ -6,14 +6,19 @@
             class="nowrap"
             v-for="(col, colIndex) in column" 
             :key="colIndex"
-            :style="{
-                width: col.width? col.width+'px': 'auto',
-                flex: col.width? 'none': 1,
-            }">
-            <span v-if="col.delete == true">
-                <button :disabled="deleteBtnDisable" @click="removeLine">
+            :style="[{
+                width: col.width? col.width+'px': col.delete == true || col.operate == true? '50px': '',
+                flex: col.width? 'none': col.delete == true || col.operate == true? 'none': 1,
+                padding: col.operate == true || col.delete == true? '0px': '0px 10px',
+                'min-width': col.operate == true || col.delete == true? '40px': '100px',
+            }]">
+            <template v-if="col.operate == true">
+                <i style="transform: translateX(-12px)" class="fa fa-cogs" aria-hidden="true"></i>
+            </template>
+            <span v-else-if="col.delete == true">
+                <button class="btn-delete" :disabled="deleteBtnDisable" @click="removeLine">
                     <i v-if="deleteBtnDisable" class="fa fa-spin fa-spinner" aria-hidden="true"></i>
-                    {{deleteBtnDisable? '删除中...': '删除'}}
+                    {{deleteBtnDisable? '': '删除'}}
                 </button>
             </span>
             <span v-else>{{col.name}}</span>
@@ -37,11 +42,14 @@
                     class="table-body-li nowrap"
                     :class="{modify: rowItem.modify == true}"
                     :key="colIndex"
-                    :style="{
-                        width: col.width? col.width+'px': '',
-                        flex: col.width? 'none': 1,
-                        'padding-left': col.isTree? 24 * rowItem.level+14+'px': '14px'
-                    }">
+                    :style="[{
+                        width: col.width? col.width+'px': col.delete == true || col.operate == true? '50px': '',
+                        flex: col.width? 'none': col.delete == true || col.operate == true? 'none': 1,
+                        padding: col.operate == true? '0px': '0px 10px',
+                        'padding-left': col.isTree? 24 * rowItem.level+14+'px': col.operate == true? '0px': '14px',
+                        overflow: col.operate == true? 'visible': '',
+                        'min-width': col.operate == true || col.delete == true? '40px': '100px',
+                    }]">
                     <!--树的伸缩按钮-->
                     <template v-if="col.isTree && rowItem.children.length != 0">
                         <span 
@@ -75,27 +83,34 @@
                     
                     <!--操作按钮-->
                     <template v-if="col.operate">
-                        <span v-show="!operateStatus['status'+rowItem.id]">
-                            <button @click="operateBtn(rowItem.id)">
-                                编辑
-                            </button>
-                            <button @click="addLine(rowItem.id, 1)">
-                                增加同级
-                            </button>
-                            <button @click="addLine(rowItem.id, 2)">
-                                增加下级
-                            </button>
-                            <button v-if="rowItem.modify" @click="upload(rowItem.id)">
-                                上传
-                            </button>
-                        </span>
-                        <span v-show="!!operateStatus['status'+rowItem.id]">
-                            <button @click="saveBtn(rowItem.id)">
-                                确认
-                            </button>
-                            <button @click="cancel(rowItem.id)">
-                                撤销
-                            </button>
+                        <span class="hover-btn">
+                            <span class="hover-btn-span">
+                                &nbsp;<i class="fa fa-pencil-square" aria-hidden="true"></i>
+                            </span>
+                            <span class="col-btn-group">
+                                <span v-show="!operateStatus['status'+rowItem.id]">
+                                    <button class="btn-edit" @click="operateBtn(rowItem.id)">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;编辑
+                                    </button>
+                                    <button class="btn-add" @click="addLine(rowItem.id, 1)">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;增加同级
+                                    </button>
+                                    <button class="btn-add" @click="addLine(rowItem.id, 2)">
+                                        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;增加下级
+                                    </button>
+                                    <button class="btn-upload" v-if="rowItem.modify" @click="upload(rowItem.id)">
+                                        <i class="fa fa-cloud-upload" aria-hidden="true"></i>&nbsp;上传
+                                    </button>
+                                </span>
+                                <span v-show="!!operateStatus['status'+rowItem.id]">
+                                    <button class="btn-confirm" @click="saveBtn(rowItem.id)">
+                                        <i class="fa fa-check" aria-hidden="true"></i>&nbsp;确认
+                                    </button>
+                                    <button class="btn-cancel" @click="cancel(rowItem.id)">
+                                        <i class="fa fa-times" aria-hidden="true"></i>&nbsp;撤销
+                                    </button>
+                                </span>
+                            </span>
                         </span>
                     </template>
                     <!--删除-复选框-->
@@ -123,9 +138,9 @@ export default {
         return {
             column: [
                 {name: 'ID', prop: 'id', width: 120},
+                {name: '删除',  delete: true }, //删除、操作不需要width
                 {name: 'name字段', prop: 'name', width: 260, isTree: true, edit: true},
-                {name: '操作', width: 250, operate: true },
-                {name: '删除', width: 60, delete: true },
+                {name: '操作',  operate: true }, //删除、操作不需要width
                 {name: 'level', prop: 'level', width: 120},
                 {name: 'url', prop: 'url', edit: true},
             ],
@@ -151,7 +166,7 @@ export default {
     
     created(){
         this.$http.get('static/menu.json').then(res=>{
-            this.init(res)
+            this.init(res.data)
         });
         
     },
@@ -159,9 +174,9 @@ export default {
         
     },
     methods: {
-        init(res){
+        init(_data){
             // 整理data
-            this.data = combineData(cleanData(res.data));
+            this.data = combineData(cleanData(_data));
             // 得到data格式
             let data_format = {...this.data[0]};
             for(let key in data_format){
@@ -330,7 +345,7 @@ export default {
                 this.$set(this.uploading, 'uploading'+rowItemId, false);
             }
         },
-        //btn-增加
+        //btn-同下级的增加
         addLine(rowItemId, indexed){
             if(indexed == 1){
                 // 1、增加同级
@@ -351,7 +366,7 @@ export default {
                     modify: true,
                     show: true,
                     
-                    //children: [],//长度为0，就没有+/-
+                    children: [],//长度为0，就没有+/-
                 }});
                 
                 //打开编辑状态
@@ -359,7 +374,30 @@ export default {
                 this.data = nowData;
             }else if(indexed == 2){
                 // 2、增加下级
-
+                let d = [...this.data];
+                let rowItem = null;
+                let rowIndex = null;
+                for(let i=0; i<d.length; i++){
+                    if(d[i].id == rowItemId){
+                        d[i].children = [true];
+                        rowItem = d[i];
+                        rowItem.icon = true;
+                        rowIndex = i;
+                    };
+                };
+                let newId = Date.now();
+                d.splice(Number.parseInt(rowIndex) + 1, 0, {...this.data_format, ...{
+                    id: newId,
+                    level: Number.parseInt(rowItem.level) + 1,
+                    parentid: rowItem.id,
+                    
+                    modify: true,
+                    show: true,
+                    
+                    children: [],//长度为0，就没有+/-
+                }});
+                this.$set(this.operateStatus, 'status'+newId, true);//打开编辑状态
+                this.data = d;
             }
         },
         //复选框切换
@@ -419,7 +457,6 @@ export default {
                     }
                 }
             };
-            
             //更新待删除集合：deleteIdArr
             this.deleteIdArr = [];
             for(let key in this.checkboxControl){
@@ -441,7 +478,7 @@ export default {
             
             /***异步上传中***/
             setTimeout(()=>{
-                if(Math.random() > 0.4){
+                if(true){
                     success.call(this);
                 }else{
                     faild.call(this);
@@ -538,14 +575,14 @@ function combineData(cleanData){
     let res = [];
     for(let i=0; i<clean.length; i++){
         res.push(clean[i])
-        a(clean[i])
+        expandToArray(clean[i])
     };
     return res;
-    function a(whenClean){
+    function expandToArray(whenClean){
         if(whenClean.children.length != 0){
             for(let j=0; j<whenClean.children.length; j++){
                 res.push(whenClean.children[j]);
-                a(whenClean.children[j]);
+                expandToArray(whenClean.children[j]);
             }
         }
     }
@@ -592,12 +629,10 @@ function combineData(cleanData){
     .table-body{
         display: block;
         .table-body-li{
-            padding: 0px 10px;
             background-color: rgba(255,255,255,.3);
             border: 1px solid #dfe6ec;
             color: #444;
             font-size: 14px;
-            min-width: 90px;
             height: 32px;
             line-height: 32px;
             text-align: left;
@@ -612,6 +647,16 @@ function combineData(cleanData){
             }
             input{
                 max-width: 100%;
+                margin: 0px;
+                height: 24px;
+                border: 1px solid #aabdbe;
+                text-indent: 8px;
+                &:focus{
+                    outline: none;
+                    -moz-outline: none;
+                    color: #378686; 
+                    border: 1px solid #2eb4ba;
+                }
             }
             span.checkbox-span{
                 width: 18px;
@@ -636,6 +681,47 @@ function combineData(cleanData){
                     top: 1px;
                 }
             }
+            .hover-btn{
+                position: relative;
+                display: inline-block;
+                width: 100%;
+                .hover-btn-span{
+                    display: inline-block;
+                    width: 100%;
+                    text-align: center;
+                    font-size: 18px;
+                }
+                .col-btn-group{
+                    display: none;
+                    position: absolute;
+                    left: calc(100% - 1px);
+                    top: 0px;
+                    z-index: 99;
+                    background: #9adde8;
+                    padding-left: 10px;
+                    padding-right: 8px;
+                    border: 1px solid #356fab;
+                    &:after{
+                        position: absolute;
+                        content: ' ';
+                        width: 12px;
+                        height: 12px;
+                        background: #9adde8;
+                        z-index: 98;
+                        left: -7px;
+                        top: 10px;
+                        transform: rotate(45deg);
+                        border: 1px solid #356fab;
+                        border-right: none;
+                        border-top: none;
+                    }
+                }
+                &:hover{
+                    .col-btn-group{
+                        display: inline-block;
+                    }
+                }
+            }
         }
     }
     button{
@@ -643,7 +729,60 @@ function combineData(cleanData){
         height: 18px;
         cursor: pointer;
         font-size: 12px;
+        padding-left: 6px;
+        padding-right: 6px;
+        &:hover,&:active,&:focus{
+            outline: none;
+            -moz-outline: none;
+        }
+        &.btn-delete{
+            background-color: #ba7438;
+            color: #eef1f6;
+            transform: translateX(-6px);
+            &:hover{
+                background-color: #e39e64;
+            }
+            &[disabled]{
+                background-color: #f3be91;
+            }
+        }
+        &.btn-edit{
+            background-color: #2a75a9;
+            color: #eef1f6;
+            &:hover{
+                background-color: #55a4db;
+            }
+        } 
+        &.btn-add{
+            background-color: #4f911d;
+            color: #eef1f6;
+            &:hover{
+                background-color: #74ba3e;
+            }
+        } 
+        &.btn-upload{
+            background-color: #59ca1f;
+            color: #eef1f6;
+            &:hover{
+                background-color: #6ddb35;
+            }
+        } 
+        &.btn-confirm{
+            background-color: #26a10f;
+            color: #eef1f6;
+            &:hover{
+                background-color: #46d72b;
+            }
+        } 
+        &.btn-cancel{
+            background-color: #a99d0d;
+            color: #eef1f6;
+            &:hover{
+                background-color: #cec120;
+            }
+        }
     }
+    
 }
 </style>
 
