@@ -1,5 +1,7 @@
 <template>
 <div class="tree-wrap">
+
+    {{deleteIdArr}}
   <div class="tree">
     <!--表头-->
     <ul class="table-header">
@@ -504,7 +506,7 @@ export default {
                         let clickLevel = d[i].level;
                         while(123456){
                             k++;
-                            if(d[k] == undefined) return;
+                            if(d[k] == undefined) break;
                             if(d[k].level > clickLevel){
                                 this.$set(this.checkboxControl, 'active'+d[k].id, true);
                             }else{
@@ -524,7 +526,7 @@ export default {
                         this.$set(this.checkboxControl, 'active'+d[i].parentid, false);
                         while(123456){
                             k++;
-                            if(d[k] == undefined) return;
+                            if(d[k] == undefined) break;
                             if(d[k].level > clickLevel){
                                 this.$set(this.checkboxControl, 'active'+d[k].id, false);
                             }else{
@@ -573,7 +575,7 @@ export default {
                 }else{
                     faild.call(this);
                 }
-            }, 1000);
+            }, 200);
 
             // 成功的回调
             function success(){
@@ -603,9 +605,9 @@ export default {
                     return true;
                 });
                 this.deleteIdArr = [];
-                this.data = combineData(cleanData(_d));
-                // this.data = _d;
                 this.deleteBtnDisable = false;
+                
+                this.data = combineData(cleanData(_d));
             };
             // 失败的回调
             function faild(){
@@ -624,7 +626,7 @@ function cleanData(data) {
     let data2 = [...data];
     let levelLength = 0;
     let clean = []
-    if(data2.length == 0) return ;
+    if(data2.length == 0) return [];
     data2.forEach(item=>{
         if(item.level > levelLength){
             levelLength = item.level;
