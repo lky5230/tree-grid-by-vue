@@ -1,4 +1,5 @@
 <template>
+<div class="tree-wrap">
   <div class="tree">
     <!--表头-->
     <ul class="table-header">
@@ -37,6 +38,7 @@
                 </span>
                 {{col.name}}
             </span>
+            <span @mousedown="willDragStart(col, $event)" class="w-resize"></span>
         </li>
     </ul>
     <!--表体-->
@@ -79,7 +81,8 @@
                         </span>  
                     </template>
                     <!--不可编辑-->
-                    <span v-if="!col.edit"> {{rowItem[col.prop]}} </span>
+                    <span v-if="!col.edit && !col.isTree && !col.operate && !col.delete && col.prop != 'id'"> {{rowItem[col.prop]}} </span>
+                    <span v-if="!col.edit && !col.isTree && !col.operate && !col.delete && col.prop == 'id'"> {{rowItem[col.prop] | timestamp__}} </span>
                     <!--可编辑-->
                     <template v-if="col.edit">
                         <span 
@@ -154,7 +157,8 @@
             </div>
         </div>
     </ul>
-  </div>    
+  </div>   
+</div> 
 </template>
 
 <script>
@@ -194,7 +198,14 @@ export default {
             refreshBtnDisable: false,
         };
     },
-    
+    filters: {
+        timestamp__: function(val){
+            if((val + "").indexOf('__timestamp__') != -1){
+                return ' - '
+            };
+            return val;
+        }
+    },
     created(){
         //#####*******
         this.$http.get('static/menu.json').then(res=>{
@@ -259,6 +270,35 @@ export default {
             }else if(index == 2){
                 this.$set(this.hoverBtn, 'hoverBtn'+rowid, false);
             }
+        },
+        //表头列-伸缩宽度
+        willDragStart(col, e){
+            if(col.prop == undefined) return ;
+            if(col.width == undefined) return ;
+            this.startClientX = e.clientX;
+            this.colItem = { ...col };
+            let _this = this;
+            let _width = col.width;
+            window.removeEventListener('mousemove', dragMove);
+            window.removeEventListener('mouseup', dragUp);
+            window.addEventListener('mousemove', dragMove);
+            window.addEventListener('mouseup', dragUp);
+            function dragMove(ev){
+                _this.moveClientX = ev.clientX;
+                let dis = _this.moveClientX - _this.startClientX;
+                let _column = [..._this.column];
+                for(let i=0; i<_column.length; i++){
+                    if(_column[i].prop == col.prop){
+                        _column[i].width = _width*1 + dis*1;
+                        break;
+                    }
+                };
+                _this.column = _column;
+            };
+            function dragUp(){
+                window.removeEventListener('mousemove', dragMove);
+                window.removeEventListener('mouseup', dragUp);
+            };
         },
         //行的伸缩
         expand(rowItem, bool){
@@ -407,7 +447,7 @@ export default {
                     };
                 };
                 let [lastLine, nowData] = this.expand(rowItem, false);
-                let newId = Date.now();
+                let newId = Date.now()+'__timestamp__';
                 nowData.splice(lastLine, 0, {...this.data_format, ...{
                     id: newId,
                     level: rowItem.level,
@@ -435,7 +475,7 @@ export default {
                         rowIndex = i;
                     };
                 };
-                let newId = Date.now();
+                let newId = Date.now()+'__timestamp__;';
                 d.splice(Number.parseInt(rowIndex) + 1, 0, {...this.data_format, ...{
                     id: newId,
                     level: Number.parseInt(rowItem.level) + 1,
@@ -555,9 +595,11 @@ export default {
                 };
                 let _d = [];
                 _d = d.filter(item=>{
-                    if(deleteIdArr.includes(item.id + "")){
-                        return false;
-                    }
+                    for(let i=0; i<deleteIdArr.length; i++){
+                        if(deleteIdArr[i]+"" == item.id+""){
+                            return false;
+                        }
+                    };
                     return true;
                 });
                 this.deleteIdArr = [];
@@ -649,8 +691,8 @@ function combineData(cleanData){
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+.tree-wrap{}
 .tree{
-    // overflow-x: hidden;
     margin: 2px;
     .table-header{
         display: flex;
@@ -667,6 +709,16 @@ function combineData(cleanData){
             height: 36px;
             line-height: 36px;
             position: relative;
+        }
+        .w-resize{
+            cursor: w-resize;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            height: 32px;
+            width: 8px;
+            background: transparent;
+            z-index: 101;
         }
     }
     .table-body-li-wrap{
