@@ -311,7 +311,7 @@ export default {
                     while(123456){
                         k++;
                         lastLine = k;
-                        if(d[k] == undefined) return [(k-1), d];
+                        if(d[k] == undefined) break;
                         if(bool == false){
                             if(d[k].level > clickLevel){
                                 d[k].show = false;
@@ -571,19 +571,29 @@ export default {
                         }
                     })
                 };
-                let _d = [];
-                _d = d.filter(item=>{
+                let _d = d.filter(item=>{
                     for(let i=0; i<deleteIdArr.length; i++){
                         if(deleteIdArr[i]+"" == item.id+""){
                             return false;
                         }
                     };
-                    return true;
+                    return true; 
                 });
+                // 修正icon是否显示
+                for(let i=0; i<_d.length; i++){
+                    if(_d[i+1] != undefined){
+                        if(_d[i+1].level <= _d[i].level){
+                            delete _d[i].icon;
+                            _d[i].children = [];
+                        }
+                    }else if(_d[i+1] == undefined){
+                        delete _d[i].icon;
+                        _d[i].children = [];
+                    }
+                };
                 this.deleteIdArr = [];
                 this.deleteBtnDisable = false;
-                
-                this.data = combineData(cleanData(_d));
+                this.data = _d;
             };
             // 失败的回调
             function faild(){
@@ -591,7 +601,7 @@ export default {
                     this.$set(this.uploading, 'uploading'+this.deleteIdArr[j], false);
                 };
                 this.deleteBtnDisable = false;
-                console.log('删除失败！')
+                alert('删除失败！')
             };
         },
 

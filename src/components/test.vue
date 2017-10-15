@@ -56,11 +56,11 @@ export default {
       uploaddelete([deleteIdArray, successFn_callback, faildFn_callback]){
             console.log(deleteIdArray)
             setTimeout(()=>{
-                if(Math.random() > 0.4){
-                    // 上传成功
+                if(Math.random() > 0.1){
+                    // 删除成功
                     successFn_callback()
                 }else{
-                    // 上传失败
+                    // 删除失败
                     faildFn_callback()
                 }
             }, 1100);
