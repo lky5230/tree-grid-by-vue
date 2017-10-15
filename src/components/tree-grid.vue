@@ -472,7 +472,8 @@ export default {
                     };
                 };
                 let newId = Date.now()+'__timestamp__;';
-                d.splice(Number.parseInt(rowIndex) + 1, 0, {...this.data_format, ...{
+                let [lastLine, nowData] = this.expand(rowItem, true);
+                nowData.splice(Number.parseInt(rowIndex) + 1, 0, {...this.data_format, ...{
                     id: newId,
                     level: Number.parseInt(rowItem.level) + 1,
                     parentid: rowItem.id,
@@ -483,7 +484,7 @@ export default {
                     children: [],//长度为0，就没有+/-
                 }});
                 this.$set(this.operateStatus, 'status'+newId, true);//打开编辑状态
-                this.data = d;
+                this.data = nowData;
             }
         },
         //复选框切换
