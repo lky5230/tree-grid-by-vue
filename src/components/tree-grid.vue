@@ -445,18 +445,32 @@ export default {
                 };
                 let [lastLine, nowData] = this.expand(rowItem, false);
                 let newId = Date.now() + '__timestamp__';
-                nowData.splice(lastLine, 0, {...this.data_format, ...{
-                    id: newId,
-                    level: rowItem.level,
-                    parentid: rowItem.parentid,
-                    
-                    modify: true,
-                    show: true,
-                    
-                    children: [],//长度为0，就没有+/-
-                }});
-                //打开编辑状态
-                this.$set(this.operateStatus, 'status'+newId, true)
+                //增加项
+                let addItem = {
+                    ...this.data_format, 
+                    ...{
+                        id: newId,
+                        level: rowItem.level,
+                        parentid: rowItem.parentid,
+                        
+                        modify: true,
+                        show: true,
+                        
+                        children: [],//长度为0，就没有+/-
+                    }
+                };
+                //增加项的父层
+                let _parentItem = d.filter(item=> item.id == addItem.parentid)[0];
+                if(_parentItem != undefined){
+                    //增加项的复选框状态
+                    this.$set(this.checkboxControl, 'active'+addItem.id, this.checkboxControl['active'+_parentItem.id]);
+                    //增加项的复选框状态为选中，则加入待删集合
+                    if(this.checkboxControl['active'+addItem.id]){
+                        this.deleteIdArr.push(addItem.id);
+                    };
+                };
+                nowData.splice(lastLine, 0, addItem);
+                this.$set(this.operateStatus, 'status'+newId, true); //打开编辑状态
                 this.data = nowData;
             }else if(indexed == 2){
                 // 2、增加下级
@@ -473,17 +487,29 @@ export default {
                 };
                 let newId = Date.now()+'__timestamp__;';
                 let [lastLine, nowData] = this.expand(rowItem, true);
-                nowData.splice(Number.parseInt(rowIndex) + 1, 0, {...this.data_format, ...{
-                    id: newId,
-                    level: Number.parseInt(rowItem.level) + 1,
-                    parentid: rowItem.id,
-                    
-                    modify: true,
-                    show: true,
-                    
-                    children: [],//长度为0，就没有+/-
-                }});
-                this.$set(this.operateStatus, 'status'+newId, true);//打开编辑状态
+                let addItem = {
+                    ...this.data_format, 
+                    ...{
+                        id: newId,
+                        level: Number.parseInt(rowItem.level) + 1,
+                        parentid: rowItem.id,
+                        
+                        modify: true,
+                        show: true,
+                        
+                        children: [],//长度为0，就没有+/-
+                    }
+                };
+                //增加项的父层
+                let _parentItem = d.filter(item=> item.id == addItem.parentid)[0];
+                //增加项的复选框状态
+                this.$set(this.checkboxControl, 'active'+addItem.id, this.checkboxControl['active'+_parentItem.id]);
+                //增加项的复选框状态为选中，则加入待删集合
+                if(this.checkboxControl['active'+addItem.id]){
+                    this.deleteIdArr.push(addItem.id);
+                };
+                nowData.splice(Number.parseInt(rowIndex) + 1, 0, addItem);
+                this.$set(this.operateStatus, 'status'+newId, true); //打开编辑状态
                 this.data = nowData;
             }
         },
