@@ -1,7 +1,5 @@
 <template>
 <div class="tree-wrap">
-
-    {{deleteIdArr}}
   <div class="tree">
     <!--表头-->
     <ul class="table-header">
@@ -97,6 +95,9 @@
                         <input 
                             v-show="operateStatus['status'+rowItem.id]" 
                             type="text"
+                            :style="{
+                                width: col.isTree? 'auto': '100%'
+                            }"
                             @input="inputEdit(rowItem.id, col.prop, $event)"
                             :value="lineValue['lineValue'+col.prop+rowItem.id]" />
                     </template>
@@ -167,17 +168,14 @@
 
 export default {
     name: 'treeGrid', 
-    props: {},
+    props: {
+        columns:{},
+        rowdata:{},
+        needUpdate: {},
+    },
     data() {
         return {
-            column: [
-                {name: 'ID', prop: 'id', width: 120},
-                {name: '删除',  delete: true }, //删除、操作不需要width
-                {name: 'name字段', prop: 'name', width: 260, isTree: true, edit: true},
-                {name: '操作',  operate: true }, //删除、操作不需要width
-                {name: 'level', prop: 'level', width: 120},
-                {name: 'url', prop: 'url', edit: true},
-            ],
+            column: [],
             data:[],
             // 每行数据对象的格式
             data_format: null,
@@ -209,29 +207,27 @@ export default {
         }
     },
     created(){
-        //#####*******
-        this.$http.get('static/menu.json').then(res=>{
-            this.init(res.data)
-        });
-        
+        //this.init();
     },
     watch: {
-        
+        needUpdate(){
+            this.init();
+        }
     },
     methods: {
-        //   ****#####刷新表格
+        // 刷新表格
         refreshTable(){
             this.refreshBtnDisable = true;
-            setTimeout(()=>{
-                this.$http.get('static/menu.json').then(res=>{
-                    this.init(res.data);
-                });
-            }, 1000)
+            this.$emit('refreshTable');
         },
-        init(_data){
+        // 初始化
+        init(){
+            this.column = [...this.columns];
+            if(this.rowdata.length == 0) return ;
+            
             this.refreshBtnDisable = false;
             // 整理data
-            this.data = combineData(cleanData(_data));
+            this.data = combineData(cleanData([...this.rowdata]));
             // 得到其中的数据对象格式
             let data_format = {...this.data[0]};
             for(let key in data_format){
@@ -240,10 +236,10 @@ export default {
                 }
             };
             this.data_format = data_format;
-            // 初始化
+            // 初始化行
             this.initValue();
         },
-        //初始化
+        //初始化行
         initValue(){
             let row = [...this.data];
             let col = [...this.column];
@@ -302,7 +298,7 @@ export default {
                 window.removeEventListener('mouseup', dragUp);
             };
         },
-        //行的伸缩
+        //相关行的折叠与展开
         expand(rowItem, bool){
             let d = [...this.data];
             let lastLine = null;
@@ -399,24 +395,14 @@ export default {
             //关闭编辑状态
             this.$set(this.operateStatus, 'status'+rowItemId, false)
         },
-        //btn-上传 #####*******
+        //btn-上传 
         upload(rowItemId){
             let d = [...this.data];
             for(let i=0; i<d.length; i++){
                 if(d[i].id == rowItemId){
                     // 显示loading
                     this.$set(this.uploading, 'uploading'+rowItemId, true);
-                    
-                    setTimeout(()=>{
-                        if(Math.random() > 0.6){
-                            // 上传成功
-                            success.call(this)
-                        }else{
-                            // 上传失败
-                            faild.call(this)
-                        }
-                    }, 400);
-                    
+                    this.$emit('uploadmodify', [d[i], success.bind(this), faild.bind(this)]);
                 }
             }
             function success(){
@@ -433,7 +419,7 @@ export default {
                 this.$set(this.uploading, 'uploading'+rowItemId, false);
             }
             function faild(){
-                console.log('失败')
+                console.log('上传失败！')
                 this.$set(this.uploading, 'uploading'+rowItemId, false);
             }
         },
@@ -449,7 +435,7 @@ export default {
                     };
                 };
                 let [lastLine, nowData] = this.expand(rowItem, false);
-                let newId = Date.now()+'__timestamp__';
+                let newId = Date.now() + '__timestamp__';
                 nowData.splice(lastLine, 0, {...this.data_format, ...{
                     id: newId,
                     level: rowItem.level,
@@ -460,7 +446,6 @@ export default {
                     
                     children: [],//长度为0，就没有+/-
                 }});
-                
                 //打开编辑状态
                 this.$set(this.operateStatus, 'status'+newId, true)
                 this.data = nowData;
@@ -559,7 +544,7 @@ export default {
                 }
             };
         },
-        //btn-删除  #####*******
+        //btn-删除 
         removeLine(){
             let deleteIdArr = [...this.deleteIdArr];
             if(deleteIdArr.length == 0) return ;
@@ -567,16 +552,7 @@ export default {
             for(let j=0; j<deleteIdArr.length; j++){
                 this.$set(this.uploading, 'uploading'+deleteIdArr[j], true);
             };
-            
-            /***异步上传中***/
-            setTimeout(()=>{
-                if(true){
-                    success.call(this);
-                }else{
-                    faild.call(this);
-                }
-            }, 200);
-
+            this.$emit('uploaddelete', [deleteIdArr, success.bind(this), faild.bind(this)]);
             // 成功的回调
             function success(){
                 let d = [...this.data];
@@ -693,7 +669,6 @@ function combineData(cleanData){
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.tree-wrap{}
 .tree{
     margin: 2px;
     .table-header{
@@ -845,7 +820,7 @@ function combineData(cleanData){
                 right: 0;
                 bottom: calc(100% - 20px);
                 perspective: 150px;
-                animation: rotateX 10s infinite alternate ease-in-out;
+                animation: tip 5.2s infinite ease-in-out;
                 transform-origin: center 22px;
                 .modify-pin-title{
                     display: block;
@@ -949,19 +924,17 @@ function combineData(cleanData){
     
 }
 
-@keyframes rotateX{
-    47%{
-        transform: rotateZ(0deg);
-    }
-    49%{
-        transform: rotateZ(-6deg);
-    }
-    51%{
-        transform: rotateZ(6deg);
-    }
-    53%{
-        transform: rotateZ(0deg);
-    }
+@keyframes tip{
+    22%{ transform: rotateZ(0deg); }
+    24%{ transform: rotateZ(-4deg); }
+    26%{ transform: rotateZ(4deg); }
+    28%{ transform: rotateZ(0deg); }
+
+    68%{ transform: translateY(0px); }
+    71%{ transform: translateY(-3px); }
+    74%{ transform: translateY(0px); }
+    77%{ transform: translateY(-3px); }
+    80%{ transform: translateY(0px); }
 }
 .as-enter-active, .as-leave-active {
   transition: all .2s
@@ -970,6 +943,5 @@ function combineData(cleanData){
   opacity: 0;
   transform: translateX(16px);
 }
-
 </style>
 
