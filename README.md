@@ -1,4 +1,4 @@
 # tree-grid-by-vue
 
-![Image text](https://raw.githubusercontent.com/hongmaju/light7Local/master/img/productShow/20170518152848.png)
+![Image text](https://github.com/lky5230/tree-grid-by-vue/blob/master/src/assets/demo.png)
 
