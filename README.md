@@ -33,7 +33,6 @@ rowdata:[{   </br>
     "id": 87, //必须，唯一id。   </br>
     "level": 1, //必须，哪个层级。   </br>
     "parentid": 1, //必须，父层的id，若是最外层就是自己的id。   </br>
-
     "name": "生产分析",    </br>
     "url": "N/A",   </br>
     "isleaf": 0   </br>
