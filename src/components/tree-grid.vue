@@ -160,7 +160,16 @@
             </div>
         </div>
     </ul>
+    <!--空-->
+    <div class="no-data" v-if="data.length == 0">
+        <i class="fa fa-file-o" aria-hidden="true"></i>&nbsp;&nbsp;数据为空
+    </div>
   </div>   
+  <!--loading-->
+  <div v-if="treeLoading && data.length != 0" class="tree-loading">
+      <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+  </div>
+  
 </div> 
 </template>
 
@@ -169,9 +178,11 @@
 export default {
     name: 'treeGrid', 
     props: {
-        columns:{},
-        rowdata:{},
-        needUpdate: {},
+        columns:{ require: true, type: Array },
+        rowdata:{ require: true, type: Array },
+        needUpdate: { require: true },
+        //刷新loading
+        treeLoading: { default: false },
     },
     data() {
         return {
@@ -207,7 +218,7 @@ export default {
         }
     },
     created(){
-        //this.init();
+        this.column = [...this.columns];
     },
     watch: {
         needUpdate(){
@@ -215,16 +226,14 @@ export default {
         }
     },
     methods: {
-        // 刷新表格
+        //刷新表格
         refreshTable(){
             this.refreshBtnDisable = true;
             this.$emit('refreshTable');
         },
-        // 初始化
+        //初始化
         init(){
-            this.column = [...this.columns];
             if(this.rowdata.length == 0) return ;
-            
             this.refreshBtnDisable = false;
             // 整理data
             this.data = combineData(cleanData([...this.rowdata]));
@@ -239,7 +248,7 @@ export default {
             // 初始化行
             this.initValue();
         },
-        //初始化行
+        //初始化行各单元格控制
         initValue(){
             let row = [...this.data];
             let col = [...this.column];
@@ -679,8 +688,32 @@ function combineData(cleanData){
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+.tree-wrap{
+    position: relative;
+    .tree-loading{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 10010;
+        background-color: rgba(255, 255, 255, .77);
+        .fa{
+            font-size: 28px;
+            display: block;
+            text-align: center;
+            margin-top: 52px; 
+        }
+    }
+}
 .tree{
     margin: 2px;
+    .no-data{
+        padding-top: 16px;
+        padding-bottom: 16px;
+        border: 1px solid #d8dcdf;
+        color: #6e5f49;
+    }
     .table-header{
         display: flex;
         width: 100%;

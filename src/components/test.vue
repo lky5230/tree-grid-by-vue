@@ -7,6 +7,7 @@
         @refreshTable="refreshTable"
         @uploadmodify="uploadmodify"
         @uploaddelete="uploaddelete"
+        :treeLoading="treeLoading"
         ></tree-grid>
   </div>
 </template>
@@ -26,19 +27,29 @@ export default {
         ],
         data: [],
         needUpdate: Date.now(),
+
+        treeLoading: false,
     }
   },
   created(){
+      this.treeLoading = true;
       this.$http.get('static/menu.json').then(res=>{
-            this.data = res.data;
-            this.needUpdate = Date.now();
+            setTimeout(()=>{
+                this.treeLoading = false;
+                this.data = res.data;
+                this.needUpdate = Date.now();
+            }, 1400);
         });
   },
   methods: {
       refreshTable(){
+        this.treeLoading = true;
         this.$http.get('static/menu.json').then(res=>{
-            this.data = res.data;
-            this.needUpdate = Date.now();
+            setTimeout(()=>{
+                this.treeLoading = false;
+                this.data = res.data;
+                this.needUpdate = Date.now();
+            }, 1400);
         });
       },
       uploadmodify([data, successFn_callback, faildFn_callback]){
