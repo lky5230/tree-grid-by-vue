@@ -55,7 +55,7 @@ export default {
       uploadmodify([data, successFn_callback, faildFn_callback]){
             console.log(data)
             setTimeout(()=>{
-                if(Math.random() > 0.4){
+                if(Math.random() > 0.1){
                     // 上传成功
                     successFn_callback()
                 }else{

@@ -1,5 +1,5 @@
 <template>
-<div class="tree-wrap">
+<div ref="tree" class="tree-wrap">
   <div class="tree">
     <!--表头-->
     <ul class="table-header">
@@ -169,7 +169,7 @@
   <div v-if="treeLoading && data.length != 0" class="tree-loading">
       <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
   </div>
-  
+
 </div> 
 </template>
 
@@ -229,12 +229,14 @@ export default {
         //刷新表格
         refreshTable(){
             this.refreshBtnDisable = true;
+            this.deleteBtnDisable = true;
             this.$emit('refreshTable');
         },
         //初始化
         init(){
             if(this.rowdata.length == 0) return ;
             this.refreshBtnDisable = false;
+            this.deleteBtnDisable = false;
             // 整理data
             this.data = combineData(cleanData([...this.rowdata]));
             // 得到其中的数据对象格式
@@ -426,10 +428,11 @@ export default {
                 };
                 this.data = d;
                 this.$set(this.uploading, 'uploading'+rowItemId, false);
+                this.creatTipDom('上传成功！', 'success');
             }
             function faild(){
-                console.log('上传失败！')
                 this.$set(this.uploading, 'uploading'+rowItemId, false);
+                this.creatTipDom('上传失败，请重试！', 'error');
             }
         },
         //btn-同下级的增加
@@ -515,6 +518,7 @@ export default {
         },
         //复选框切换
         checkbox_change(rowItemId){
+            if(this.deleteBtnDisable) return;
             let old_bool = this.checkboxControl['active'+rowItemId];
             this.$set(this.checkboxControl, 'active'+rowItemId, !old_bool);
             let now_bool = !old_bool;
@@ -630,6 +634,7 @@ export default {
                 this.deleteIdArr = [];
                 this.deleteBtnDisable = false;
                 this.data = _d;
+                this.creatTipDom('删除成功！', 'success');
             };
             // 失败的回调
             function faild(){
@@ -637,8 +642,34 @@ export default {
                     this.$set(this.uploading, 'uploading'+this.deleteIdArr[j], false);
                 };
                 this.deleteBtnDisable = false;
-                alert('删除失败！')
+                this.creatTipDom('删除失败，请重试！', 'error');
             };
+        },
+        //创建-提示框dom
+        creatTipDom(tip, status){
+            let tipDom = null;
+            let tipBg = null;
+            if(status == 'success'){
+                tipDom = `<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp; ${tip}`;
+                tipBg = '#40b965';
+            }else if(status == 'error'){
+                tipDom = `<i class="fa fa-times-circle" aria-hidden="true"></i>&nbsp;${tip}`;
+                tipBg = '#da8b29';
+            };
+            let dom = window.document.createElement('div');
+            dom.className = "__tip-dom__-wrap";
+            dom.innerHTML = `<div class="__tip-dom__" style="text-align: center;height: 32px;padding-left: 12px;padding-right: 12px;line-height: 32px;background: ${tipBg};color: #fff;position: fixed;z-index: 10010;left: 50%;transform: translateX(-50%);top: -42px; transition: all .4s;"> ${tipDom} </div>`;
+            this.$refs.tree.appendChild(dom);
+            setTimeout(()=>{
+                window.document.querySelector('.__tip-dom__').style.top = '14px';
+                setTimeout(()=>{
+                    window.document.querySelector('.__tip-dom__').style.top = '-42px';
+                    setTimeout(()=>{
+                        let remove = window.document.querySelector('.__tip-dom__-wrap');
+                        this.$refs.tree.removeChild(remove);
+                    }, 500);
+                }, 2000);
+            }, 0);
         },
 
     },
@@ -707,9 +738,7 @@ function combineData(cleanData){
 </script>
 
 <style lang="scss" scoped>
-*{
-    box-sizing: border-box !important;
-}
+*{ box-sizing: border-box !important; }
 .nowrap{
     overflow: hidden;
     white-space: nowrap;
@@ -717,6 +746,7 @@ function combineData(cleanData){
 }
 .tree-wrap{
     position: relative;
+    font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
     .tree-loading{
         width: 100%;
         height: 100%;
@@ -748,9 +778,9 @@ function combineData(cleanData){
             padding: 0px 10px;
             background-color: #eef1f6;
             border: 1px solid #dfe6ec;
-            color: #5c5c5c;
-            font-weight: bold;
-            font-size: 15px;
+            color: #1f2f3d;
+            font-weight: 400;
+            font-size: 16px;
             text-indent: 12px;
             min-width: 90px;
             height: 36px;
@@ -782,7 +812,10 @@ function combineData(cleanData){
             padding-left: 50px;
         }
         &:hover{
-            background-color: #dfe6ec;
+            background-color: #ebf3f0;
+            .table-body-li{
+                color: #965757;
+            }
         }
     }
     .table-body{
@@ -790,17 +823,22 @@ function combineData(cleanData){
         .table-body-li{
             background-color: rgba(255,255,255,.3);
             border: 1px solid #dfe6ec;
-            color: #444;
+            color: #454545;
             font-size: 14px;
             height: 32px;
             line-height: 32px;
             text-align: left;
+            
             &:nth-of-type(1){
                 position: relative;
                 overflow: visible;
             }
             &.modify{
                 background: #f7f4ea;
+                color: #E3431C;
+                .hover-btn-span{
+                    color: #E3431C !important;
+                }
             }
             .fa{
                 cursor: pointer;
@@ -817,8 +855,8 @@ function combineData(cleanData){
                 &:focus{
                     outline: none;
                     -moz-outline: none;
-                    color: #378686; 
-                    border: 1px solid #2eb4ba;
+                    color: #E3431C;
+                    border: 1px solid #E3431C;
                 }
             }
             span.checkbox-span{
@@ -898,15 +936,15 @@ function combineData(cleanData){
                     font-size: 10px;
                     line-height: 16px;
                     text-align: center;
-                    background: #dfc888;
+                    background: #e76e50;
                     width: 54px;
-                    color: #652e0c;
+                    color: #fff;
                 }
                 .fa{
                     display: block;
                     text-align: center;
-                    font-size: 10px;    
-                    color: #864816;
+                    font-size: 10px;   
+                    color: #E3431C;
                 }
             }
             
