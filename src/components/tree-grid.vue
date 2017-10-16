@@ -45,8 +45,8 @@
     <ul class="table-body">
         <div 
             v-for="(rowItem, rowIndex) in data" 
-            @mouseleave="rowMouseLeave(rowItem.id)"
-            @mouseenter="rowMouseEnter(rowItem.id)"
+            @mouseout="rowMouseLeave(rowItem.id)"
+            @mouseover="rowMouseEnter(rowItem.id)"
             class="table-body-li-wrap"
             v-show="rowItem.show"
             :key="rowItem.id">
@@ -111,24 +111,28 @@
                             <transition name="as">
                                 <span v-show="hoverBtn['hoverBtn'+rowItem.id]" class="col-btn-group">
                                     <span v-show="!operateStatus['status'+rowItem.id]">
-                                        <button class="btn-edit" @click="operateBtn(rowItem.id)">
+                                        <button class="btn-edit" @click.stop="operateBtn(rowItem.id)">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;编辑
                                         </button>
-                                        <button class="btn-add" @click="addLine(rowItem.id, 1)">
+                                        <button class="btn-add" @click.stop="addLine(rowItem.id, 1)">
                                             <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;增加同级
                                         </button>
-                                        <button class="btn-add" @click="addLine(rowItem.id, 2)">
+                                        <button class="btn-add" @click.stop="addLine(rowItem.id, 2)">
                                             <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;增加下级
                                         </button>
-                                        <button class="btn-upload" v-if="rowItem.modify" @click="upload(rowItem.id)">
+                                        <button v-if="rowItem.isleaf == 0" class="btn-update" @click.stop="updateLine(rowItem.id)">
+                                            <i class="fa fa-plug" aria-hidden="true"></i>
+                                            更新
+                                        </button> 
+                                        <button class="btn-upload" v-if="rowItem.modify" @click.stop="upload(rowItem.id)">
                                             <i class="fa fa-cloud-upload" aria-hidden="true"></i>&nbsp;上传
                                         </button>
                                     </span>
                                     <span v-show="!!operateStatus['status'+rowItem.id]">
-                                        <button class="btn-confirm" @click="saveBtn(rowItem.id)">
+                                        <button class="btn-confirm" @click.stop="saveBtn(rowItem.id)">
                                             <i class="fa fa-check" aria-hidden="true"></i>&nbsp;确认
                                         </button>
-                                        <button class="btn-cancel" @click="cancel(rowItem.id)">
+                                        <button class="btn-cancel" @click.stop="cancel(rowItem.id)">
                                             <i class="fa fa-times" aria-hidden="true"></i>&nbsp;撤销
                                         </button>
                                     </span>
@@ -368,7 +372,7 @@ export default {
             //打开编辑状态
             this.$set(this.operateStatus, 'status'+rowItemId, true)
         },
-        //btn-确认
+        //btn-确认 
         saveBtn(rowItemId){
             let d = [...this.data];
             let col = [...this.column];
@@ -406,7 +410,7 @@ export default {
             //关闭编辑状态
             this.$set(this.operateStatus, 'status'+rowItemId, false)
         },
-        //btn-上传 
+        //btn-上传  
         upload(rowItemId){
             let d = [...this.data];
             for(let i=0; i<d.length; i++){
@@ -436,7 +440,7 @@ export default {
                 this.creatTipDom('上传失败，请重试！', 'error');
             }
         },
-        //btn-同下级的增加
+        //btn-同下级的增加 
         addLine(rowItemId, indexed){
             if(indexed == 1){
                 // 1、增加同级
@@ -459,6 +463,7 @@ export default {
                         
                         modify: true,
                         show: true,
+                        isleaf: 1,
                         
                         children: [],//长度为0，就没有+/-
                     }
@@ -500,6 +505,7 @@ export default {
                         
                         modify: true,
                         show: true,
+                        isleaf: 1,
                         
                         children: [],//长度为0，就没有+/-
                     }
@@ -517,7 +523,11 @@ export default {
                 this.data = nowData;
             }
         },
-        //复选框切换
+        //btn-更新 "isleaf = 0" 的行
+        updateLine(rowItemId){
+            
+        },
+        //复选框切换 
         checkbox_change(rowItemId){
             if(this.deleteBtnDisable) return;
             let old_bool = this.checkboxControl['active'+rowItemId];
@@ -681,6 +691,55 @@ function cleanData(data) {
     let levelLength = 0;
     let clean = []
     if(data2.length == 0) return [];
+    // data2 = data2.map(item=>{
+    //     delete item.level;
+    //     return item;
+    // });
+    // data2 = data2.map(item=>{
+    //     if(item.parentid == 0 || item.parentid == item.id){
+    //         item.level = 0;
+    //         return item;
+    //     };
+    //     return item;
+    // });
+
+    // let only0 = true;
+    // while(123){
+    //     if( data2.filter(item=>{
+    //             if(item.level == undefined) return true;
+    //             return false;
+    //         }).length == 0 ) {break} else
+    //     {
+    //         let nowIndex = -1;
+    //         data2.forEach(item=>{
+    //             if(only0){
+    //                 nowIndex = 0;
+    //             }else{
+    //                 if(item.level && item.level > nowIndex){
+    //                     nowIndex = item.level;
+    //                 }
+    //             };
+    //         });
+    //         console.log(nowIndex)
+    //         let prev = data2.filter(item=>{
+    //             if(item.level == nowIndex) return true;
+    //             return false;
+    //         });
+    //         data2 = data2.map(item=>{
+    //             for(let i=0; i<prev.length; i++){
+    //                 if(item.parentid == prev[i].id){
+    //                     item.level = nowIndex*1 + 1;
+    //                     return item;
+    //                 }else{
+    //                     return item;
+    //                 }
+    //             };
+    //         });
+    //         only0 = false;
+    //     }
+    // };
+    // console.log('完了')
+
     data2.forEach(item=>{
         if(item.level > levelLength){
             levelLength = item.level;
@@ -1028,6 +1087,13 @@ function combineData(cleanData){
             &:hover{
                 background-color: #cec120;
             }
+        }
+        &.btn-update{
+            background-color: #21c2a5;
+            color: #eef1f6;
+            &:hover{
+                background-color: #2dcaae;
+            } 
         }
     }
     
