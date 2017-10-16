@@ -415,7 +415,8 @@ export default {
                     this.$set(this.uploading, 'uploading'+rowItemId, true);
                     this.$emit('uploadmodify', [d[i], success.bind(this), faild.bind(this)]);
                 }
-            }
+            };
+            this.rowMouseLeave(rowItemId);
             function success(){
                 let d = [...this.data];
                 let col = [...this.column];
