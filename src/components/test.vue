@@ -4,25 +4,27 @@
         :columns="columns"
         :rowdata="data"
         :needUpdate="needUpdate"
+        leafUrl="http://api.fanhua.dev.tianheng-uestc.com/api/v1/apitest//component/treegrid/base?parentid="
+        :treeLoading="treeLoading"
+
         @refreshTable="refreshTable"
         @uploadmodify="uploadmodify"
         @uploaddelete="uploaddelete"
-        :treeLoading="treeLoading"
         ></tree-grid>
   </div>
 </template>
 
 <script>
-import treeGrid from '@/components/tree-grid'
+import treeGrid from '@/commonComponents/tree-grid'
 export default {
   data(){
     return {
         columns: [
-            {name: 'ID', prop: 'id', width: 120},
+            {name: 'ID', prop: 'id', width: 50},
             {name: '删除',  delete: true }, //删除、操作不需要width
             {name: 'name字段', prop: 'name', width: 260, isTree: true, edit: true},
             {name: '操作',  operate: true }, //删除、操作不需要width
-            {name: 'level', prop: 'level', width: 120},
+            // {name: 'level', prop: 'level', width: 120},
             {name: 'url', prop: 'url', edit: true},
         ],
         data: [],

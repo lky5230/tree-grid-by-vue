@@ -44,9 +44,7 @@
     <!--表体-->
     <ul class="table-body">
         <div 
-            v-for="(rowItem, rowIndex) in data" 
-            @mouseout="rowMouseLeave(rowItem.id)"
-            @mouseover="rowMouseEnter(rowItem.id)"
+            v-for="(rowItem, rowIndex) in data"
             class="table-body-li-wrap"
             v-show="rowItem.show"
             :key="rowItem.id">
@@ -71,14 +69,19 @@
                     <template v-if="col.isTree && rowItem.children.length != 0">
                         <span 
                             @click="expand(rowItem, true)" 
-                            v-show="rowItem.icon == false">
+                            v-show="rowItem._icon_ == false">
                             <i class="fa fa-plus-square" aria-hidden="true"></i>
                         </span>
                         <span 
                             @click="expand(rowItem, false)" 
-                            v-show="rowItem.icon == true">
+                            v-show="rowItem._icon_ == true">
                             <i class="fa fa-minus-square" aria-hidden="true"></i>
                         </span>  
+                    </template>
+                    <template v-if="col.isTree && rowItem.children.length == 0 && rowItem.isleaf == 0">
+                        <span @click.stop="updateLine(rowItem.id, rowItem.level)">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </span>
                     </template>
                     <!--不可编辑-->
                     <span v-if="!col.edit && !col.isTree && !col.operate && !col.delete && col.prop != 'id'"> {{rowItem[col.prop]}} </span>
@@ -104,7 +107,11 @@
 
                     <!--操作按钮-->
                     <template v-if="col.operate">
-                        <span class="hover-btn" @mouseover="mouseHover(rowItem.id, 1)"  @mouseout="mouseHover(rowItem.id, 2)" >
+                        <span class="hover-btn"
+                            @mouseenter="mouseHover(rowItem.id, 1)"  
+                            @mouseleave="mouseHover(rowItem.id, 2)"
+                            @click.stop="mouseClick(rowItem.id)"
+                            >
                             <span class="hover-btn-span">
                                 &nbsp;<i class="fa fa-pencil-square" aria-hidden="true"></i>
                             </span>
@@ -114,16 +121,19 @@
                                         <button class="btn-edit" @click.stop="operateBtn(rowItem.id)">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;编辑
                                         </button>
-                                        <button class="btn-add" @click.stop="addLine(rowItem.id, 1)">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;增加同级
-                                        </button>
-                                        <button class="btn-add" @click.stop="addLine(rowItem.id, 2)">
-                                            <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;增加下级
-                                        </button>
-                                        <button v-if="rowItem.isleaf == 0" class="btn-update" @click.stop="updateLine(rowItem.id)">
-                                            <i class="fa fa-plug" aria-hidden="true"></i>
-                                            更新
-                                        </button> 
+                                        <template v-if="rowItem.children.length == 0 && rowItem.isleaf == 0">
+                                            <span style="font-size: 12px; color: #216a9c;">请先点击左侧 + 展开</span>
+                                        </template>
+                                        <template v-else>
+                                            <button class="btn-add" @click.stop="addLine(rowItem.id, 1)">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;增加同级
+                                            </button>
+                                            <button class="btn-add" @click.stop="addLine(rowItem.id, 2)">
+                                                <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;增加下级
+                                            </button>
+                                        </template>
+                                        
+
                                         <button class="btn-upload" v-if="rowItem.modify" @click.stop="upload(rowItem.id)">
                                             <i class="fa fa-cloud-upload" aria-hidden="true"></i>&nbsp;上传
                                         </button>
@@ -185,6 +195,7 @@ export default {
         columns:{ require: true, type: Array },
         rowdata:{ require: true, type: Array },
         needUpdate: { require: true },
+        leafUrl: {},
         //刷新loading
         treeLoading: { default: false },
     },
@@ -192,10 +203,10 @@ export default {
         return {
             column: [],
             data:[],
+            device: null,
             // 每行数据对象的格式
             data_format: null,
             // 移入移出-控制
-            operate:{},
             hoverBtn: {},
             // 每行的编辑状态
             operateStatus: {},
@@ -223,6 +234,7 @@ export default {
     },
     created(){
         this.column = [...this.columns];
+        if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(window.navigator.userAgent)) { this.device = 'phone' } else { this.device = 'pc' };
     },
     watch: {
         needUpdate(){
@@ -269,20 +281,27 @@ export default {
                 }
             }
         },
-        //行的移入、移出
-        rowMouseEnter(id){
-            this.$set(this.operate, 'operate'+id, true);
-        },
-        rowMouseLeave(id){
-            this.$set(this.operate, 'operate'+id, false);
-        },
-        //操作列的移入移出
+        //操作列-移入移出
         mouseHover(rowid, index){
             if(index == 1){
                 this.$set(this.hoverBtn, 'hoverBtn'+rowid, true);
             }else if(index == 2){
                 this.$set(this.hoverBtn, 'hoverBtn'+rowid, false);
             }
+        },
+        //兼容移动端-操作列
+        mouseClick(rowid){
+            let _this = this;
+            if(this.device == 'phone'){
+                this.mouseHover(rowid, 1);
+                window.document.removeEventListener('click', docClick);
+                window.document.addEventListener('click', docClick);
+                function docClick(){
+                    for(let key in _this.hoverBtn){
+                        _this.$set(_this.hoverBtn, key, false);
+                    };
+                }
+            };
         },
         //表头列-伸缩宽度
         willDragStart(col, e){
@@ -319,7 +338,7 @@ export default {
             let lastLine = null;
             for(let i=0; i<d.length; i++){
                 if(d[i].id == rowItem.id){
-                    d[i].icon = bool;
+                    d[i]._icon_ = bool;
                     let temp_level = Number.MAX_SAFE_INTEGER;
                     let k = i;
                     let clickLevel = d[i].level;
@@ -340,7 +359,7 @@ export default {
                                 }else if(d[k].level == temp_level){
                                     temp_level = Number.MAX_SAFE_INTEGER;
                                 }
-                                if(d[k].icon == false){
+                                if(d[k]._icon_ == false){
                                     temp_level = d[k].level;
                                 }
                                 d[k].show = true;
@@ -420,7 +439,7 @@ export default {
                     this.$emit('uploadmodify', [d[i], success.bind(this), faild.bind(this)]);
                 }
             };
-            this.rowMouseLeave(rowItemId);
+            this.mouseHover(rowItemId, 2);
             function success(){
                 let d = [...this.data];
                 let col = [...this.column];
@@ -490,7 +509,7 @@ export default {
                     if(d[i].id == rowItemId){
                         d[i].children = [true];
                         rowItem = d[i];
-                        rowItem.icon = true;
+                        rowItem._icon_ = true;
                         rowIndex = i;
                     };
                 };
@@ -523,9 +542,53 @@ export default {
                 this.data = nowData;
             }
         },
-        //btn-更新 "isleaf = 0" 的行
-        updateLine(rowItemId){
-            
+        //btn-图标-更新 "isleaf = 0"
+        updateLine(rowItemId, level){
+            this.mouseHover(rowItemId, 2);
+            this.$set(this.uploading, 'uploading'+rowItemId, true);
+            this.$http.get(this.leafUrl + rowItemId).then(res => {
+                let d = res.data.data;
+                if(d.length == 0){
+                    let data = [...this.data];
+                    let rowIndex = null;
+                    for(let i=0; i<data.length; i++){
+                        if(data[i].id == rowItemId){
+                            data[i].children = [];
+                            data[i].isleaf = 1;
+                            break ;
+                        };
+                    };
+                    this.data = data;
+                    return ;
+                };
+                this.deleteIdArr = [];
+                let old_bool = this.checkboxControl['active'+rowItemId];
+                for(let i=0; i<d.length; i++){
+                    d[i] = {...this.data_format, ...d[i]};
+                    d[i].show = true;
+                    d[i].level = level*1 + 1;
+                    d[i].parentid = rowItemId;
+                    this.$set(this.checkboxControl, 'active'+d[i].id, old_bool)
+                };
+                let data = [...this.data];
+                let rowIndex = null;
+                for(let i=0; i<data.length; i++){
+                    if(data[i].id == rowItemId){
+                        rowIndex = i;
+                        data[i].children = [true];
+                        data[i].isleaf = 1;
+                        data[i]._icon_ = true;
+                    };
+                };
+                data.splice(rowIndex*1+1, 0, ...d);
+                this.data = data;
+                this.$set(this.uploading, 'uploading'+rowItemId, false);
+                this.creatTipDom(`请求id：${rowItemId}成功！`, 'success');
+            }).catch(err=>{
+                console.error(err);
+                this.$set(this.uploading, 'uploading'+rowItemId, false);
+                this.creatTipDom(`请求id：${rowItemId}失败！`,'error');
+            });
         },
         //复选框切换 
         checkbox_change(rowItemId){
@@ -634,11 +697,11 @@ export default {
                 for(let i=0; i<_d.length; i++){
                     if(_d[i+1] != undefined){
                         if(_d[i+1].level <= _d[i].level){
-                            delete _d[i].icon;
+                            delete _d[i]._icon_;
                             _d[i].children = [];
                         }
                     }else if(_d[i+1] == undefined){
-                        delete _d[i].icon;
+                        delete _d[i]._icon_;
                         _d[i].children = [];
                     }
                 };
@@ -691,54 +754,30 @@ function cleanData(data) {
     let levelLength = 0;
     let clean = []
     if(data2.length == 0) return [];
-    // data2 = data2.map(item=>{
-    //     delete item.level;
-    //     return item;
-    // });
-    // data2 = data2.map(item=>{
-    //     if(item.parentid == 0 || item.parentid == item.id){
-    //         item.level = 0;
-    //         return item;
-    //     };
-    //     return item;
-    // });
-
-    // let only0 = true;
-    // while(123){
-    //     if( data2.filter(item=>{
-    //             if(item.level == undefined) return true;
-    //             return false;
-    //         }).length == 0 ) {break} else
-    //     {
-    //         let nowIndex = -1;
-    //         data2.forEach(item=>{
-    //             if(only0){
-    //                 nowIndex = 0;
-    //             }else{
-    //                 if(item.level && item.level > nowIndex){
-    //                     nowIndex = item.level;
-    //                 }
-    //             };
-    //         });
-    //         console.log(nowIndex)
-    //         let prev = data2.filter(item=>{
-    //             if(item.level == nowIndex) return true;
-    //             return false;
-    //         });
-    //         data2 = data2.map(item=>{
-    //             for(let i=0; i<prev.length; i++){
-    //                 if(item.parentid == prev[i].id){
-    //                     item.level = nowIndex*1 + 1;
-    //                     return item;
-    //                 }else{
-    //                     return item;
-    //                 }
-    //             };
-    //         });
-    //         only0 = false;
-    //     }
-    // };
-    // console.log('完了')
+    data2 = data2.map(item=>{
+        delete item.level;
+        return item;
+    });
+    function convert(orgin)
+    {
+        var result = arguments[1] ? arguments[1] : [];
+        var level = arguments[2] ? arguments[2] : 0;
+        var parentid = arguments[3] ? arguments[3] : 0;
+        for(var x in orgin)
+        {
+            if(orgin[x]["parentid"]==parentid)
+            {
+                orgin[x]["level"]=level;
+                result.push(orgin[x]);
+                if(orgin[x]["isleaf"]!=1) //若不是叶子节点
+                {
+                    convert(orgin,result,level+1,orgin[x]["id"]);
+                }
+            }
+        }
+        return result;
+    };
+    data2 = convert(data2);
 
     data2.forEach(item=>{
         if(item.level > levelLength){
@@ -769,7 +808,7 @@ function cleanData(data) {
             let _i = index - 1;
             for(let i=0; i<clean[_i].length; i++){
                 if(clean[_i][i].id == obj.parentid){
-                    clean[_i][i].icon = true;//初始化全部展开
+                    clean[_i][i]._icon_ = true;//初始化全部展开
                     clean[_i][i].children.push(obj);
                 }
             }
