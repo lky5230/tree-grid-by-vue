@@ -17,7 +17,7 @@
                 <i style="transform: translateX(-12px)" class="fa fa-cogs" aria-hidden="true"></i>
             </template>
             <span v-else-if="col.delete == true">
-                <button title="删除所选项" class="btn-delete" :disabled="deleteBtnDisable" @click="removeLine">
+                <button id="tree_grid___id" title="删除所选项" class="btn-delete" :disabled="deleteBtnDisable" @click="removeLine">
                     <i v-if="deleteBtnDisable" class="fa fa-spin fa-spinner" aria-hidden="true"></i>
                     <i v-if="!deleteBtnDisable" class="fa fa-trash" aria-hidden="true"></i>
                 </button>
@@ -196,6 +196,7 @@ export default {
         rowdata:{ require: true, type: Array },
         needUpdate: { require: true },
         leafUrl: {},
+        onlyAddOne: { default: false },
         //刷新loading
         treeLoading: { default: false },
     },
@@ -255,6 +256,7 @@ export default {
             this.deleteBtnDisable = false;
             // 整理data
             this.data = combineData(cleanData([...this.rowdata]));
+            this.$emit('currentDate', [...this.data])
             // 得到其中的数据对象格式
             let data_format = {...this.data[0]};
             for(let key in data_format){
@@ -371,6 +373,7 @@ export default {
                 }
             };
             this.data = d;
+            this.$emit('currentDate', [...this.data])
             return [lastLine, d];
         },
         //行的输入事件
@@ -384,7 +387,9 @@ export default {
                 }
             };
             this.data = d;
+            this.$emit('currentDate', [...this.data])
             this.$set(this.lineValue, 'lineValue'+colProp+rowItemId, e.target.value);
+
         },
         //btn-编辑
         operateBtn(rowItemId){
@@ -409,6 +414,7 @@ export default {
                 }
             };
             this.data = d;
+            this.$emit('currentDate', [...this.data])
             //关闭编辑状态
             this.$set(this.operateStatus, 'status'+rowItemId, false)
         },
@@ -440,7 +446,7 @@ export default {
                 }
             };
             this.mouseHover(rowItemId, 2);
-            function success(){
+            function success(tip){
                 let d = [...this.data];
                 let col = [...this.column];
                 for(let i=0; i<d.length; i++){
@@ -451,12 +457,13 @@ export default {
                     }
                 };
                 this.data = d;
+                this.$emit('currentDate', [...this.data])
                 this.$set(this.uploading, 'uploading'+rowItemId, false);
-                this.creatTipDom('上传成功！', 'success');
+                this.creatTipDom(tip || '上传成功！', 'success');
             }
-            function faild(){
+            function faild(tip){
                 this.$set(this.uploading, 'uploading'+rowItemId, false);
-                this.creatTipDom('上传失败，请重试！', 'error');
+                this.creatTipDom(tip || '上传失败，请重试！', 'error');
             }
         },
         //btn-同下级的增加 
@@ -500,6 +507,7 @@ export default {
                 nowData.splice(lastLine, 0, addItem);
                 this.$set(this.operateStatus, 'status'+newId, true); //打开编辑状态
                 this.data = nowData;
+                this.$emit('currentDate', [...this.data])
             }else if(indexed == 2){
                 // 2、增加下级
                 let d = [...this.data];
@@ -511,6 +519,12 @@ export default {
                         rowItem = d[i];
                         rowItem._icon_ = true;
                         rowIndex = i;
+                    };
+                };
+                if(this.onlyAddOne){
+                    if(rowItem.id.indexOf('_timestamp') != -1){
+                        this.$alert('请先保存节点')
+                        return ;
                     };
                 };
                 let newId = Date.now()+'__timestamp__;';
@@ -540,6 +554,7 @@ export default {
                 nowData.splice(Number.parseInt(rowIndex) + 1, 0, addItem);
                 this.$set(this.operateStatus, 'status'+newId, true); //打开编辑状态
                 this.data = nowData;
+                this.$emit('currentDate', [...this.data])
             }
         },
         //btn-图标-更新 "isleaf = 0"
@@ -547,7 +562,14 @@ export default {
             this.mouseHover(rowItemId, 2);
             this.$set(this.uploading, 'uploading'+rowItemId, true);
             this.$http.get(this.leafUrl + rowItemId).then(res => {
-                let d = res.data.data;
+                let d = [];
+                if(res.data instanceof Array){
+                    d = res.data;
+                }else if(res.data.data instanceof Array){
+                    d = res.data.data;
+                }else{
+                    console.warn('请检查响应数据是否在response.data或response.data.data里面！');
+                };
                 if(d.length == 0){
                     let data = [...this.data];
                     let rowIndex = null;
@@ -559,6 +581,8 @@ export default {
                         };
                     };
                     this.data = data;
+                    this.$emit('currentDate', [...this.data])
+                    this.$set(this.uploading, 'uploading'+rowItemId, false);
                     return ;
                 };
                 this.deleteIdArr = [];
@@ -582,8 +606,9 @@ export default {
                 };
                 data.splice(rowIndex*1+1, 0, ...d);
                 this.data = data;
+                this.$emit('currentDate', [...this.data])
                 this.$set(this.uploading, 'uploading'+rowItemId, false);
-                this.creatTipDom(`请求id：${rowItemId}成功！`, 'success');
+                // this.creatTipDom(`请求id：${rowItemId}成功！`, 'success');
             }).catch(err=>{
                 console.error(err);
                 this.$set(this.uploading, 'uploading'+rowItemId, false);
@@ -668,7 +693,7 @@ export default {
             };
             this.$emit('uploaddelete', [deleteIdArr, success.bind(this), faild.bind(this)]);
             // 成功的回调
-            function success(){
+            function success(tip){
                 let d = [...this.data];
                 let deleteIdArr = [...this.deleteIdArr];
                 deleteIdArr.map(item=>{
@@ -708,15 +733,16 @@ export default {
                 this.deleteIdArr = [];
                 this.deleteBtnDisable = false;
                 this.data = _d;
-                this.creatTipDom('删除成功！', 'success');
+                this.$emit('currentDate', [...this.data])
+                this.creatTipDom(tip || '删除成功！', 'success');
             };
             // 失败的回调
-            function faild(){
+            function faild(tip){
                 for(let j=0; j<this.deleteIdArr.length; j++){
                     this.$set(this.uploading, 'uploading'+this.deleteIdArr[j], false);
                 };
                 this.deleteBtnDisable = false;
-                this.creatTipDom('删除失败，请重试！', 'error');
+                this.creatTipDom(tip || '删除失败，请重试！', 'error');
             };
         },
         //创建-提示框dom
@@ -765,18 +791,19 @@ function cleanData(data) {
         var parentid = arguments[3] ? arguments[3] : 0;
         for(var x in orgin)
         {
-            if(orgin[x]["parentid"]==parentid)
+            if(orgin[x]["parentid"]==parentid&&orgin[x]["skip_012ea834e2aa011ef16f7d846889c026"]!=1)
             {
                 orgin[x]["level"]=level;
-                result.push(orgin[x]);
-                if(orgin[x]["isleaf"]!=1) //若不是叶子节点
+                result.push(JSON.parse(JSON.stringify(orgin[x]))); //对象深拷贝
+                orgin[x]["skip_012ea834e2aa011ef16f7d846889c026"]=1;//标记该节点不用再遍历
+                if(orgin[x]["isleaf"]!=1)
                 {
-                    convert(orgin,result,level+1,orgin[x]["id"]);
+                   convert(orgin,result,level+1,orgin[x]["id"]);
                 }
             }
         }
         return result;
-    };
+    }
     data2 = convert(data2);
 
     data2.forEach(item=>{
@@ -868,7 +895,9 @@ function combineData(cleanData){
         padding-top: 16px;
         padding-bottom: 16px;
         border: 1px solid #d8dcdf;
-        color: #6e5f49;
+        color: rgb(94, 115, 130);
+        font-size: 14px;
+        text-align: center;
     }
     .table-header{
         display: flex;
