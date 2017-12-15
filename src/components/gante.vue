@@ -116,7 +116,7 @@
 <script>
 
 const Snap = require(`imports-loader?this=>window,fix=>module.exports=0!snapsvg/dist/snap.svg.js`);
-
+console.log(Snap)
 export default {
   data() {
     return {

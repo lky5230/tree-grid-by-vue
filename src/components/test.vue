@@ -1,7 +1,7 @@
 <template>
   <div>
-	<button @click="toto != toto"> 切换到{{toto? '甘特图': 'tree-grid'}}</button>
-	<div v-show="toto">
+	<button @click="toto = !toto"> 切换到{{toto? '甘特图': 'tree-grid'}}</button>
+	<div v-if="toto">
 		<tree-grid
 			:columns="columns"
 			:rowdata="data"
@@ -14,15 +14,15 @@
 			@uploaddelete="uploaddelete"
         ></tree-grid>
 	</div>
-	<div v-show="!toto">
+	<div v-if="!toto">
 		<gante />
 	</div>
   </div>
 </template>
 
 <script>
-import treeGrid from '@/commonComponents/tree-grid'
-import gante from '@/commonComponents/gante'
+import treeGrid from '@/components/tree-grid'
+import gante from '@/components/gante'
 export default {
   data(){
     return {
@@ -89,7 +89,7 @@ export default {
 
   },
   components: {
-      treeGrid
+      treeGrid,gante
   }
 }
 </script>
