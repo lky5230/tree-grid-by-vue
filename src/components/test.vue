@@ -1,28 +1,38 @@
 <template>
   <div>
-    <tree-grid
-        :columns="columns"
-        :rowdata="data"
-        :needUpdate="needUpdate"
-        @refreshTable="refreshTable"
-        @uploadmodify="uploadmodify"
-        @uploaddelete="uploaddelete"
-        :treeLoading="treeLoading"
+	<button @click="toto != toto"> 切换到{{toto? '甘特图': 'tree-grid'}}</button>
+	<div v-show="toto">
+		<tree-grid
+			:columns="columns"
+			:rowdata="data"
+			:needUpdate="needUpdate"
+			leafUrl="http://api.fanhua.dev.tianheng-uestc.com/api/v1/apitest//component/treegrid/base?parentid="
+			:treeLoading="treeLoading"
+
+			@refreshTable="refreshTable"
+			@uploadmodify="uploadmodify"
+			@uploaddelete="uploaddelete"
         ></tree-grid>
+	</div>
+	<div v-show="!toto">
+		<gante />
+	</div>
   </div>
 </template>
 
 <script>
-import treeGrid from '@/components/tree-grid'
+import treeGrid from '@/commonComponents/tree-grid'
+import gante from '@/commonComponents/gante'
 export default {
   data(){
     return {
+		toto: true,
         columns: [
-            {name: 'ID', prop: 'id', width: 120},
+            {name: 'ID', prop: 'id', width: 50},
             {name: '删除',  delete: true }, //删除、操作不需要width
             {name: 'name字段', prop: 'name', width: 260, isTree: true, edit: true},
             {name: '操作',  operate: true }, //删除、操作不需要width
-            {name: 'level', prop: 'level', width: 120},
+            // {name: 'level', prop: 'level', width: 120},
             {name: 'url', prop: 'url', edit: true},
         ],
         data: [],
