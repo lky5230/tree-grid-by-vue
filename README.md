@@ -1,49 +1,95 @@
-tree-grid-by-vue  
--------
+#=tree-grid-by-vue  
+######列拥有的功能： 
+1.可编辑
+2.可下拉选择
+3.可动态请求子层级节点
+4.可批量选中
+4.功能性复选框选择
+---
+![Image text](https://github.com/lky5230/tree-grid-by-vue/blob/master/src/assets/image1.png)
+![Image text](https://github.com/lky5230/tree-grid-by-vue/blob/master/src/assets/image2.png)
 ![Image text](https://github.com/lky5230/tree-grid-by-vue/blob/master/src/assets/demo.png)
-## 样例
-<tree-grid   </br>
-    :columns="columns"   </br>
-    :rowdata="data"   </br>
-    :needUpdate="needUpdate"   </br>
-    @refreshTable="refreshTable"   </br>
-    @uploadmodify="uploadmodify"   </br>
-    @uploaddelete="uploaddelete"   </br>
-    :treeLoading="treeLoading"   </br>
-></tree-grid>   </br>
-### 属性
-#1、列属性  </br>
-columns: [   </br>
-    {name: 'ID', prop: 'id', width: 120},   </br>
-    {name: '删除',  delete: true },    </br>
-    {name: 'name字段', prop: 'name', width: 260, isTree: true, edit: true},   </br>
-    {name: '操作',  operate: true },    </br>
-    {name: 'level', prop: 'level', width: 120},   </br>
-    {name: 'url', prop: 'url', edit: true},   </br>
-]   </br>
-#2、行数据的格式   </br>
-rowdata:[{   </br>
-    "id": 87, //必须，唯一id。   </br>
-    "level": 1, //必须，哪个层级。   </br>
-    "parentid": 1, //必须，父层的id，若是最外层就是自己的id。   </br>
-    "name": "生产分析",    </br>
-    "url": "N/A",   </br>
-    "isleaf": 0   </br>
+>######样例1
+```
+<tree-grid
+     :columns="columns"  // 表示列
+     :rowdata="data"     //表示数据
+     :leafUrl="http://api.fan.dev?parentid="   //动态请求子节点时的接口url，会拼接点击的节点的id
+     :needUpdate="needUpdate"  //更新数据源，需要传入他触发更新，比如传
+ Date.now()
+     :onlyLineEdit="true" //是否每行只能编辑，不能创建兄弟节点和子节点
+      /* 当leafUrl存在时必须存在funcListAlias！这是功能性复选框选择的功能 */
+      /* 
+        表示从请求的数组数据里面，比如用 
+        permission: [
+              {permission_id:1, permission_name: '删除', checked: true }, 
+              {permission_id:2, permission_name: '审核', checked: false}，
+              {permission_id:3, permission_name: '更新', checked: false}
+        ]  
+        作为数据时，如下
+      */
+        :funcListAlias="{     
+             funcList: 'permission',
+             id: 'permission_id',
+             name: 'permission_name',
+             checked: 'select',
+         }"
+     @currentDate="currentDate" //当每次对tree-grid有一些改动时，可以监听它
+ >
+</tree-grid>
+```
+>######样例2
+```
+<tree-grid
+     :columns="columns"
+     :rowdata="data"
+     :needUpdate="needUpdate"
+     :onlyAddOne="true"   //表示只能在已存在的节点下添加子节点
+     :treeLoading="treeLoading"  //loading，布尔值
+     :showDeleteBtn="false"  //是否在删除列表头显示删除按钮，默认false
+    @currentDate="currentDate"
+    @uploadmodify="uploadmodify"   //有操作列时，点上传会触发它，参数 [data（修改过的数据集合）, successFn, faildFn], 数据是data，成功则调用successFn('成功！')， 失败调用faildFn('失败！')
+    @uploaddelete="uploaddelete"  //点击复选框列th的删除按钮时会触发它（可以控制台查看按钮id，手动触发 window.document.querySelector('#tree_grid___id').click();），参数 [data, successFn, faildFn], 数据是data（选中的id集合），成功则调用successFn('成功！')， 失败调用faildFn('失败！')>
+</tree-grid>
+```
+> ######列的定义：columns
+```
+  /*
+    'name'    //该列title名称
+    'prop',    //该列取数据源的哪个属性
+    'width',   //该列宽度
+    'delete',  //该列是不是复选框列（有它就不需要不需要其他了）
+    'isTree',  //该列是不是层级列
+    'edit',     //该列可不可以编辑
+    'operate',  //该列是不是操作列（有它就不需要不需要其他了）
+    'select',   //该列可不可以下拉
+    'optionList' //和select一起使用，值：['下拉1','下拉2','下拉3']
+    "funcList"  //该列是不是(功能性复选框选择)列
+  */
+columns: [ 
+    {name: 'ID', prop: 'id', width: 120},
+    {name: '删除',  delete: true, width: 60 },
+    {name: 'name字段', prop: 'name', width: 250, isTree: true, edit: true},
+    {name: '操作',  operate: true, width: 60 },
+    {name: 'level', prop: 'level', width: 120, select: true, optionList: ['下拉1', '下拉2']},
+    {name: 'url', prop: 'url', edit: true},
+     /*
+     功能选择：取得的数据，prop对应字段: 比如'func' = [
+         {permission_id:1, permission_name: '删除', checked: true }, 
+         {permission_id:2, permission_name: '审核', checked: false}，
+         {permission_id:3, permission_name: '更新', checked: false}
+     ],
+     注意：对接 funcListAlias 属性！
+     */
+     { name: '功能选择', prop: 'func', funcList: true, width: 50 },
+] 
+```
+> ######行数据的格式：rowdata
+```
+rowdata: [{  
+    "id": 87, //必须，唯一id 
+    "parentid": 22, //必须，父层的id，若自己就是顶层节点，则parentid=0 
+    "isleaf": 0或1  //必须？，表示是否含有子节点
+    ......
 }]
-#3、是否接收父组件rowdata传入  </br>
-[[比如：Date.now()]每次父组件需要更新rowdata时，需要给needUpdate传入[时间戳/uuid]等来监听。] ` </br>
-:needUpdate="needUpdate"    </br>
-`
-#4、表格loading状态   </br>
-[布尔值]   </br>
-:treeLoading="treeLoading"    </br>
-### 事件
-#1、   </br>
-[该函数是用来刷新表格并重新传入rowdata数据，这里还需要needUpdate。]   </br>
-@refreshTable="refreshTable"   </br>
-#2、   </br>
-[提交修改请求，比如修改行，增加行等，uploadmodify函数的参数是一个数组 [data, successFn_callback, faildFn_callback]，其中data表示修改的对象信息，data的id属性若含有'__timestamp__'字符，表示这是新增的行，successFn_callback和faildFn_callback需要在请求成功或者失败后调用。]   </br>
-@uploadmodify="uploadmodify"   </br>
-#3、   </br>
-[提交删除所选行请求，uploaddelete函数的参数是一个数组 [deleteIdArray, successFn_callback, faildFn_callback]，其中deleteIdArray表示待删除的id集合，successFn_callback和faildFn_callback需要在请求成功或者失败后调用。]   </br>
-@uploaddelete="uploaddelete"   </br>
+```
