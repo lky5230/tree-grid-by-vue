@@ -14,11 +14,11 @@
 <tree-grid
      :columns="columns"  // 表示列
      :rowdata="data"     //表示数据
-     :leafUrl="http://api.fan.dev?parentid="   //动态请求子节点时的接口url，会拼接点击的节点的id
-     :needUpdate="needUpdate"  //更新数据源，需要传入他触发更新，比如传
+     :leafUrl="http://api.fan.dev?parentid="   //动态请求子节点时的接口url，会拼接点击的节点的id, 此时数据需要isleaf = 0
+     :needUpdate="needUpdate"  //更新数据源，需要传入他触发更新，比如传
  Date.now()
      :onlyLineEdit="true" //是否每行只能编辑，不能创建兄弟节点和子节点
-      /* 当leafUrl存在时必须存在funcListAlias！这是功能性复选框选择的功能 */
+      /* 当funcList存在时必须存在funcListAlias！这是功能性复选框选择的功能 */
       /* 
         表示从请求的数组数据里面，比如用 
         permission: [
@@ -89,7 +89,7 @@ columns: [
 rowdata: [{  
     "id": 87, //必须，唯一id 
     "parentid": 22, //必须，父层的id，若自己就是顶层节点，则parentid=0 
-    "isleaf": 0或1  //必须？，表示是否含有子节点
-    ......
+    "isleaf"?: 0或1  //【当需要动态获取子节点功能时】就需要它，表示是否含有子节点（0：动态获取子节点，1：无子节点）
+    ......
 }]
 ```
