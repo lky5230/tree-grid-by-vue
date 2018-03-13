@@ -66,6 +66,29 @@
                         overflow: col.operate == true? 'visible': '',
                     }]">
                     <!--树的伸缩按钮-->
+                    <!-- 1、有子节点的加图标 -->
+                    <template v-if="col.isTree">
+                        <!-- 线 -->
+                        <!-- v-line-h v-line-full v-line-top v-line-bottom -->
+                        <i 
+                            v-if="rowItem.level != 0"
+                            v-for="(line, indexLine) in rowItem.level" 
+                            :key="indexLine"
+                            :style="{left: (line-1)*30 + 16 +'px'}" 
+                            class="v-line-full">
+                        </i>
+                        <i 
+                            v-if="rowItem._icon_ == true" 
+                            :style="{left: rowItem.level*30 + 16 +'px'}" 
+                            class="v-line-bottom">
+                        </i>
+                        <i 
+                            v-if="rowItem.level != 0"
+                            :style="{left: (rowItem.level-1)*30 + 16 +'px'}" 
+                            class="v-line-h">
+                        </i>
+                    </template>
+
                     <template v-if="col.isTree && rowItem.children.length != 0">
                         <span
                             @click="expand(rowItem, true)"
@@ -78,6 +101,7 @@
                             <i class="fa fa-minus-square" aria-hidden="true"></i>
                         </span>
                     </template>
+                    <!-- 2、需要动态增加子节点的加图标 -->
                     <template v-if="col.isTree && rowItem.children.length == 0 && rowItem.isleaf == 0">
                         <span @click.stop="updateLine(rowItem.id, rowItem.level)">
                             <i class="fa fa-plus-square" aria-hidden="true"></i>
@@ -1146,6 +1170,7 @@ function combineData(cleanData){
             height: 32px;
             line-height: 32px;
             text-align: left;
+            position: relative;
             &:nth-last-child(1){
                 border-right: 1px solid #dfe6ec;
             }
@@ -1373,6 +1398,30 @@ function combineData(cleanData){
 .as-enter, .as-leave-to {
   opacity: 0;
   transform: translateX(16px);
+}
+.v-line-full{
+    position: absolute;
+    top: 0px;
+    left: 6px;
+    height: 32px;
+    width: 1px;
+    background: #666;
+}
+.v-line-bottom{
+    position: absolute;
+    bottom: 0px;
+    left: 6px;
+    height: 10px;
+    width: 1px;
+    background: #666;
+}
+.v-line-h{
+    position: absolute;
+    top: 16px;
+    left: 6px;
+    height: 1px;
+    width: 24px;
+    background: #666;
 }
 </style>
 
